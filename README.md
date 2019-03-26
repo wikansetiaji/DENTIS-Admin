@@ -1,6 +1,6 @@
 # dent_is_admin
 
-A new Flutter application.
+A new Flutter application. This is Captain Bahy speaking.
 
 ## Getting Started
 
