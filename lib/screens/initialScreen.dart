@@ -39,7 +39,7 @@ class _InitialScreenState extends State<InitialScreen> {
                       context, 
                       new MaterialPageRoute(
                           builder: (BuildContext context) =>
-                          new LoginScreen()
+                          new LoginScreen(role:"admin")
                         )
                       );
                     },
@@ -54,7 +54,7 @@ class _InitialScreenState extends State<InitialScreen> {
                       context, 
                       new MaterialPageRoute(
                           builder: (BuildContext context) =>
-                          new LoginScreen()
+                          new LoginScreen(role:"dokter")
                         )
                       );
                     },
@@ -69,7 +69,7 @@ class _InitialScreenState extends State<InitialScreen> {
                       context, 
                       new MaterialPageRoute(
                           builder: (BuildContext context) =>
-                          new LoginScreen()
+                          new LoginScreen(role:"manajer")
                         )
                       );
                     },
