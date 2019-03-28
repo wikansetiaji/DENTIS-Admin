@@ -160,7 +160,7 @@ class _AdminFAQState extends State<AdminFAQ> {
                         color: Colors.black,
                         onPressed: ()async{
                           await launch(
-                            "mailto:smith@example.org?subject=News&body=New%20plugin"
+                            "mailto:valerysazz@gmail.com?subject=QNA Help"
                           );
                         },
                       ),
@@ -175,11 +175,11 @@ class _AdminFAQState extends State<AdminFAQ> {
                         color: Colors.black,
                         onPressed: ()async{
                           await launch(
-                            "tel:+1 555 010 999"
+                            "tel:081229079453"
                           );
                         },
                       ),
-                      Text("081281219082")
+                      Text("081229079453")
                     ],
                   )
                 ],

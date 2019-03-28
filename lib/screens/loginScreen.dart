@@ -6,6 +6,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'admin/adminHome.dart';
+import 'dokter/dokterTabs.dart';
 
 class LoginScreen extends StatefulWidget {
   final String role;
@@ -51,13 +52,24 @@ class _LoginScreenState extends State<LoginScreen> {
       List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/${widget.role}-login/")));
       print("this is the cookies: ${cookies}");
       
-       Navigator.pushReplacement(
-        context, 
-        new MaterialPageRoute(
-            builder: (BuildContext context) =>
-            new AdminHome()
-          )
-        );
+      if (widget.role=="admin"){
+        Navigator.pushReplacement(
+          context, 
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+              new AdminHome()
+            )
+          );
+      }
+      else if(widget.role=="dokter"){
+        Navigator.pushReplacement(
+          context, 
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+              new DokterTabs()
+            )
+          );
+      }
 
       setState(() {
         alert="";

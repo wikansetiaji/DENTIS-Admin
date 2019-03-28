@@ -17,10 +17,10 @@ dependencies:
     sdk: flutter
   http:
   dio:
-  path_provider:
+  path_provider: ^0.4.0
   cookie_jar: ^1.0.0
-  url_launcher:
-  
+  url_launcher: ^4.0.0
+  webview_flutter: ^0.2.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -49,7 +49,11 @@ flutter:
     - assets/gradient-footer.png
     - assets/users.png
     - assets/appointments.png
+    - assets/appointment.png
     - assets/faqs.png
+    - assets/kuisioner.png
+    - assets/plus-circle.png
+    - assets/line.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
