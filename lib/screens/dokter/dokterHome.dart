@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'pemeriksaan/newUser.dart';
 
 class DokterHome extends StatelessWidget {
   @override
@@ -54,24 +55,35 @@ class DokterHome extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                height: 108,
-                width: 90,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: AssetImage("assets/plus-circle.png"))
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context, 
+                    new MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                        new NewUser()
+                      )
+                  );
+                },
+                child: Container(
+                  height: 108,
+                  width: 90,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(image: AssetImage("assets/plus-circle.png"))
+                        ),
                       ),
-                    ),
-                    Container(
-                      height: 13,
-                    ),
-                    Text("Pemeriksaan Baru",textAlign: TextAlign.center,)
-                  ],
+                      Container(
+                        height: 13,
+                      ),
+                      Text("Pemeriksaan Baru",textAlign: TextAlign.center,)
+                    ],
+                  ),
                 ),
               ),
               Container(

@@ -21,6 +21,7 @@ dependencies:
   cookie_jar: ^1.0.0
   url_launcher: ^4.0.0
   webview_flutter: ^0.2.0
+  image_picker: ^0.4.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,6 +55,21 @@ flutter:
     - assets/kuisioner.png
     - assets/plus-circle.png
     - assets/line.png
+    - assets/odontogram/gigi4kecil.png
+    - assets/odontogram/gigi5kecil.png
+    - assets/odontogram/gigi5kecilselected.png
+    - assets/odontogram/gigi4kecilselected.png
+    - assets/detailGigi/gigi5/bg.png
+    - assets/detailGigi/gigi5/d.png
+    - assets/detailGigi/gigi5/l.png
+    - assets/detailGigi/gigi5/m.png
+    - assets/detailGigi/gigi5/o.png
+    - assets/detailGigi/gigi5/v.png
+    - assets/detailGigi/gigi4/bg.png
+    - assets/detailGigi/gigi4/d.png
+    - assets/detailGigi/gigi4/l.png
+    - assets/detailGigi/gigi4/m.png 
+    - assets/detailGigi/gigi4/v.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
