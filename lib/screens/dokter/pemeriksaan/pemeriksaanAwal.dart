@@ -238,7 +238,7 @@ class _PemeriksaanAwalState extends State<PemeriksaanAwal> {
                       if (post){
                         widget.data.addAll({
                           "rekamMedis":{
-                            "anamnesis":anamnesaController.text,
+                            "anamnesa":anamnesaController.text,
                             "alergi":alergiController.text,
                             "riwayatPenyakit":riwayatController.text,
                             "tekananDarah":tekananDarahController.text,

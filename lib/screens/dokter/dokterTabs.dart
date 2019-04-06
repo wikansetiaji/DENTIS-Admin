@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dokterHome.dart';
 import 'dokterNews.dart';
+import 'statistik.dart';
 
 class DokterTabs extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class _DokterTabsState extends State<DokterTabs> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     DokterHome(),
-    Container(),
+    Statistik(),
     DokterNews()
   ];
   

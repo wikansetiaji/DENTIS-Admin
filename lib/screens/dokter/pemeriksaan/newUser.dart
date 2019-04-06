@@ -131,7 +131,7 @@ class _NewUserState extends State<NewUser> {
                         setState(() {
                           alert = "";
                         });
-                        data={"pasien":{"nama":namaController.text,"jenisKelamin":jenisKelamin}};
+                        data={"pasien":{"name":namaController.text,"jenisKelamin":jenisKelamin, "no_hp":"081229079453"}};
                         Navigator.push(
                           context, 
                           new MaterialPageRoute(

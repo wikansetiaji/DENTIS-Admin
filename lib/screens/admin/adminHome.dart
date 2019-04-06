@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dent_is_admin/components/buttonCard.dart';
 import 'adminFAQ.dart';
+import 'adminAkun.dart';
 
 class AdminHome extends StatelessWidget {
   @override

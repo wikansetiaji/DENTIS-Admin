@@ -53,7 +53,7 @@ class DataPasien extends StatelessWidget {
               ),
               Container(height: 31,),
               Text(
-                "${data["pasien"]["nama"]}",
+                "${data["pasien"]["name"]}",
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 20

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screens/splashScreen.dart';
 import 'package:flutter/services.dart';
+import 'screens/admin/adminHome.dart';
+import 'screens/dokter/dokterHome.dart';
 
 void main() => SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
     .then((_) {
@@ -16,6 +18,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: SplashScreen(),
+      routes: <String, WidgetBuilder>{
+        '/adminHome': (context) => AdminHome(),
+        '/dokterHome': (context) => DokterHome(),
+      },
     );
   }
 }
