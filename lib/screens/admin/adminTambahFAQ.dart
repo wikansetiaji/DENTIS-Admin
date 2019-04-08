@@ -15,34 +15,53 @@ class _AdminAddFAQState extends State<AdminAddFAQ> {
   double height=0;
   final pertanyaanController = TextEditingController();
   final jawabanController = TextEditingController();
+  String alertPertanyaan="";
+  String alertJawaban="";
 
   submit()async{
-    setState(() {
-      height=MediaQuery.of(context).size.height;
-    });
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-    
-    PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
-    print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
-    var response =  await http.post(
-      'http://10.0.2.2:8000/faqs/',
-      headers: {
-        "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
-        "X-CSRFToken":cookies[0].value
-      },
-      body: {
-        "question":pertanyaanController.text,
-        "answer":jawabanController.text,
-      }
-    );
-    var body = json.decode(response.body);
-    print(body);
-    setState(() {
-      height=0;
-    });
-    Navigator.of(context).pop();
+    alertJawaban="";
+    alertPertanyaan="";
+    bool pass=true;
+    if (pertanyaanController.text==""){
+      pass=false;
+      setState(() {
+        alertPertanyaan="Field wajib diisi";
+      });
+    }
+    if (jawabanController.text==""){
+      pass=false;
+      setState(() {
+        alertJawaban="Field wajib diisi";
+      });
+    }
+    if (pass){
+      setState(() {
+        height=MediaQuery.of(context).size.height;
+      });
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+      
+      PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
+      print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
+      var response =  await http.post(
+        'http://10.0.2.2:8000/faqs/',
+        headers: {
+          "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+          "X-CSRFToken":cookies[0].value
+        },
+        body: {
+          "question":pertanyaanController.text,
+          "answer":jawabanController.text,
+        }
+      );
+      var body = json.decode(response.body);
+      print(body);
+      setState(() {
+        height=0;
+      });
+      Navigator.of(context).pop();
+    }
     }
 
   @override
@@ -82,6 +101,11 @@ class _AdminAddFAQState extends State<AdminAddFAQ> {
                     ),
                     Container(height: 13,),
                     Container(
+                      padding: EdgeInsets.only(left:40),
+                      alignment: Alignment.centerLeft,
+                      child: Text("${alertPertanyaan}",style: TextStyle(color: Colors.red),),
+                    ),
+                    Container(
                       height: 80,
                       width: 325,
                       child: new TextField(
@@ -94,6 +118,11 @@ class _AdminAddFAQState extends State<AdminAddFAQ> {
                         ),
                         controller: pertanyaanController,
                       ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left:40),
+                      alignment: Alignment.centerLeft,
+                      child: Text("${alertJawaban}",style: TextStyle(color: Colors.red),),
                     ),
                     Container(
                       height: 80,
