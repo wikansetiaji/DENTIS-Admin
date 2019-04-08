@@ -5,15 +5,15 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'adminTambahPasien.dart';
-import 'adminEditPasien.dart';
+import 'adminTambahManajer.dart';
+import 'adminEditManajer.dart';
 
-class AdminPasiens extends StatefulWidget {
+class AdminManajers extends StatefulWidget {
   @override
-  _AdminPasiensState createState() => _AdminPasiensState();
+  _AdminManajersState createState() => _AdminManajersState();
 }
 
-class _AdminPasiensState extends State<AdminPasiens> {
+class _AdminManajersState extends State<AdminManajers> {
   double height=0;
   List<Widget> isi = [];
 
@@ -28,7 +28,7 @@ class _AdminPasiensState extends State<AdminPasiens> {
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
     List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
     var response =  await http.get(
-      'http://10.0.2.2:8000/pasien/',
+      'http://10.0.2.2:8000/manajer/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -53,8 +53,9 @@ class _AdminPasiensState extends State<AdminPasiens> {
                           context, 
                           new MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              new AdminEditPasien(
-                                id:i["id"],
+                              new AdminEditManajer(
+                                ktp: i["ktp"],
+                                id:"${user["id"]}",
                                 alamat: i["alamat"]!=null?i["alamat"]:"",
                                 email: user!=null?user["email"]:"",
                                 jenisKelamin: i["jenisKelamin"]!=null?i["jenisKelamin"]:"",
@@ -76,7 +77,7 @@ class _AdminPasiensState extends State<AdminPasiens> {
                       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
                       List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
                       var response =  await http.delete(
-                        'http://10.0.2.2:8000/pasien/${i["id"]}/',
+                        'http://10.0.2.2:8000/manajer/${i["user"]["id"]}/',
                         headers: {
                           "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
                           "X-CSRFToken":cookies[0].value
@@ -131,22 +132,22 @@ class _AdminPasiensState extends State<AdminPasiens> {
                 Row(
                   children: <Widget>[
                     Text(
-                      "Pasien",
+                      "Manajer",
                       style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                     ),
                     Container(
-                      width: 70,
+                      width: 25,
                     ),
                     ButtonGradient(
                       height: 40,
                       width: 130,
-                      text: "Tambah Pasien",
+                      text: "Tambah Manajer",
                       onTap: (){
                         Navigator.push(
                           context, 
                           new MaterialPageRoute(
                               builder: (BuildContext context) =>
-                              new AdminTambahPasien()
+                              new AdminTambahManajer()
                             )
                           );
                       },

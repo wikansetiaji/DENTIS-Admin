@@ -51,7 +51,7 @@ class _StatistikState extends State<Statistik> {
               width: 230,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("${bodyStatus["image"]}")
+                  image: NetworkImage("http://10.0.2.2:8000${bodyStatus["image"]}")
                 )
               ),
             )
