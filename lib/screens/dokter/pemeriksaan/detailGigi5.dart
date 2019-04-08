@@ -38,8 +38,10 @@ class _DetailGigi5State extends State<DetailGigi5> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ci=widget.ohisData[widget.code]["ci"];
-    di=widget.ohisData[widget.code]["di"];
+    if (widget.ohis){
+      ci=widget.ohisData[widget.code]["ci"];
+      di=widget.ohisData[widget.code]["di"];
+    }
     values =  widget.conditions.length!=0?widget.conditions:{"d":-1,"l":-1,"m":-1,"o":-1,"v":-1};
   }
 

@@ -6,7 +6,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 
-class AdminEditPasien extends StatefulWidget {
+class AdminEditManajer extends StatefulWidget {
   final String id;
   final String username;
   final String email;
@@ -15,8 +15,9 @@ class AdminEditPasien extends StatefulWidget {
   final String jenisKelamin;
   final String alamat;
   final String tanggalLahir;
+  final String ktp;
 
-  AdminEditPasien({
+  AdminEditManajer({
     @required this.id,
     @required this.username,
     @required this.email,
@@ -24,14 +25,15 @@ class AdminEditPasien extends StatefulWidget {
     @required this.nama,
     @required this.jenisKelamin,
     @required this.alamat,
-    @required this.tanggalLahir
+    @required this.tanggalLahir,
+    @required this.ktp,
   });
 
   @override
-  _AdminEditPasienState createState() => _AdminEditPasienState();
+  _AdminEditManajerState createState() => _AdminEditManajerState();
 }
 
-class _AdminEditPasienState extends State<AdminEditPasien> {
+class _AdminEditManajerState extends State<AdminEditManajer> {
   double height=0;
 
   String jenisKelamin="l";
@@ -64,6 +66,7 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
     noHpController.text=widget.noHp;
     tanggalLahirController.text=widget.tanggalLahir;
     alamatController.text=widget.alamat;
+    nomorKTPController.text=widget.ktp;
   }
 
   bool isNumeric(String s) {
@@ -88,6 +91,30 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
     String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
     RegExp regExp = new RegExp(p);
+    if (tanggalLahirController.text==""){
+      pass= false;
+      setState(() {
+        alertTanggalLahir="Wajib diisi";
+      });
+    }
+    if (alamatController.text==""){
+      pass= false;
+      setState(() {
+        alertAlamat="Wajib diisi";
+      });
+    }
+    if (noHpController.text==""){
+      pass= false;
+      setState(() {
+        alertNomorTelepon="Wajib diisi";
+      });
+    }
+    if (nomorKTPController.text==""){
+      pass= false;
+      setState(() {
+        alertNomorKtp="Wajib diisi";
+      });
+    }
     if (namaController.text==""){
       pass= false;
       setState(() {
@@ -135,7 +162,7 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
       List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
       print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
       var response =  await http.patch(
-        'http://10.0.2.2:8000/pasien/${widget.id}/',
+        'http://10.0.2.2:8000/manajer/${widget.id}/',
         headers: {
           "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
           "X-CSRFToken":cookies[0].value
@@ -148,7 +175,8 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
           "no_hp":noHpController.text,
           "jenisKelamin":jenisKelamin,
           "alamat":alamatController.text,
-          "tanggalLahir":tanggalLahirController.text
+          "tanggalLahir":tanggalLahirController.text,
+          "ktp":nomorKTPController.text,
         }
       );
       var body = json.decode(response.body);
@@ -190,7 +218,7 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        "Ubah Pasien",
+                        "Ubah Manajer",
                         style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                       ),
                       Container(height: 40,),
@@ -267,7 +295,7 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                       Container(
                         padding: EdgeInsets.all(5),
                         alignment: Alignment.centerLeft,
-                        child: Text("",style: TextStyle(color: Colors.red),),
+                        child: Text("$alertNomorKtp",style: TextStyle(color: Colors.red),),
                       ),
                       Container(
                         height: 60,
@@ -279,8 +307,8 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                             border: new OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
                               borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Nomor KTP',
-                            labelText: 'Nomor KTP',
+                            hintText: 'Nomor KTP*',
+                            labelText: 'Nomor KTP*',
                           ),
                         ),
                       ),
@@ -357,8 +385,8 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                             border: new OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
                               borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Nomor Telepon',
-                            labelText: 'Nomor Telepon',
+                            hintText: 'Nomor Telepon*',
+                            labelText: 'Nomor Telepon*',
                           ),
                         ),
                       ),
@@ -380,8 +408,8 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                                 border: new OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(10)),
                                   borderSide: new BorderSide(color: Colors.blue)),
-                                hintText: 'Tanggal Lahir',
-                                labelText: 'Tanggal Lahir',
+                                hintText: 'Tanggal Lahir*',
+                                labelText: 'Tanggal Lahir*',
                               ),
                             ),
                           ),
@@ -418,8 +446,8 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                             border: new OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
                               borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Alamat',
-                            labelText: 'Alamat',
+                            hintText: 'Alamat*',
+                            labelText: 'Alamat*',
                           ),
                         ),
                       ),

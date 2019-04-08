@@ -304,8 +304,8 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
                             border: new OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
                               borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Email',
-                            labelText: 'Email',
+                            hintText: 'Email*',
+                            labelText: 'Email*',
                           ),
                         ),
                       ),

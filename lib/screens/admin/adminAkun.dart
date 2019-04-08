@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'adminPasiens.dart';
+import 'adminDokters.dart';
+import 'adminManajers.dart';
 
 class AdminAkun extends StatefulWidget {
   @override
@@ -58,6 +60,15 @@ class _AdminAkunState extends State<AdminAkun> {
                 ),
                 Container(width: 28,),
                 InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context, 
+                      new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                          new AdminDokters()
+                        )
+                      );
+                  },
                   child: Container(
                     height: 122,
                     width: 122,
@@ -72,6 +83,15 @@ class _AdminAkunState extends State<AdminAkun> {
             ),
             Container(height: 28,),
             InkWell(
+               onTap: (){
+                    Navigator.push(
+                      context, 
+                      new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                          new AdminManajers()
+                        )
+                      );
+                  },
               child: Container(
                 height: 122,
                 width: 122,
