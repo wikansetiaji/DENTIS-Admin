@@ -72,31 +72,31 @@ class _ManajerHomeState extends State<ManajerHome> {
       Container(height: 10,),
       ListTile(
         title: Text("Senin"),
-        trailing: Text("${listPengunjung[0]}"),
+        trailing: Text("${listPengunjung[0]}" + " orang"),
       ),
       ListTile(
         title: Text("Selasa"),
-        trailing: Text("${listPengunjung[1]}"),
+        trailing: Text("${listPengunjung[1]}" + " orang"),
       ),
       ListTile(
         title: Text("Rabu"),
-        trailing: Text("${listPengunjung[2]}"),
+        trailing: Text("${listPengunjung[2]}" + " orang"),
       ),
       ListTile(
         title: Text("Kamis"),
-        trailing: Text("${listPengunjung[3]}"),
+        trailing: Text("${listPengunjung[3]}" + " orang"),
       ),
       ListTile(
         title: Text("Jumat"),
-        trailing: Text("${listPengunjung[4]}"),
+        trailing: Text("${listPengunjung[4]}" + " orang"),
       ),
       ListTile(
         title: Text("Sabtu"),
-        trailing: Text("${listPengunjung[5]}"),
+        trailing: Text("${listPengunjung[5]}" + " orang"),
       ),
       ListTile(
         title: Text("Minggu"),
-        trailing: Text("${listPengunjung[6]}"),
+        trailing: Text("${listPengunjung[6]}" + " orang"),
       ),
     ];
     status = [
@@ -118,51 +118,51 @@ class _ManajerHomeState extends State<ManajerHome> {
       Container(height: 10,),
       ListTile(
         title: Text("Normal"),
-        trailing: Text("${listStatus[0]}"),
+        trailing: Text("${listStatus[0]}" + "%"),
       ),
       ListTile(
         title: Text("Sound"),
-        trailing: Text("${listStatus[1]}"),
+        trailing: Text("${listStatus[1]}" + "%"),
       ),
       ListTile(
         title: Text("Caries"),
-        trailing: Text("${listStatus[2]}"),
+        trailing: Text("${listStatus[2]}" + "%"),
       ),
       ListTile(
         title: Text("Filled with Caries"),
-        trailing: Text("${listStatus[3]}"),
+        trailing: Text("${listStatus[3]}" + "%"),
       ),
       ListTile(
         title: Text("Filled no Caries"),
-        trailing: Text("${listStatus[4]}"),
+        trailing: Text("${listStatus[4]}" + "%"),
       ),
       ListTile(
         title: Text("Missing due to Caries"),
-        trailing: Text("${listStatus[5]}"),
+        trailing: Text("${listStatus[5]}" + "%"),
       ),
       ListTile(
         title: Text("Missing for Another Reason"),
-        trailing: Text("${listStatus[6]}"),
+        trailing: Text("${listStatus[6]}" + "%"),
       ),
       ListTile(
         title: Text("Fissure Sealant"),
-        trailing: Text("${listStatus[7]}"),
+        trailing: Text("${listStatus[7]}" + "%"),
       ),
       ListTile(
         title: Text("Fix dental prosthesis / crown, abutment, veneer "),
-        trailing: Text("${listStatus[8]}"),
+        trailing: Text("${listStatus[8]}" + "%"),
       ),
       ListTile(
         title: Text("Unerupted"),
-        trailing: Text("${listStatus[9]}"),
+        trailing: Text("${listStatus[9]}" + "%"),
       ),
       ListTile(
         title: Text("Not recorded"),
-        trailing: Text("${listStatus[10]}"),
+        trailing: Text("${listStatus[10]}" + "%"),
       ),
       ListTile(
         title: Text("Whitespot"),
-        trailing: Text("${listStatus[11]}"),
+        trailing: Text("${listStatus[11]}" + "%"),
       ),
     ];
 
@@ -185,15 +185,15 @@ class _ManajerHomeState extends State<ManajerHome> {
       Container(height: 10,),
       ListTile(
         title: Text("Baik"),
-        trailing: Text("${listOhis[0]}"),
+        trailing: Text("${listOhis[0]}" + "%"),
       ),
       ListTile(
         title: Text("Sedang"),
-        trailing: Text("${listOhis[1]}"),
+        trailing: Text("${listOhis[1]}" + "%"),
       ),
       ListTile(
         title: Text("Buruk"),
-        trailing: Text("${listOhis[2]}"),
+        trailing: Text("${listOhis[2]}" + "%"),
       ),
     ];
     setState(() {
