@@ -102,13 +102,20 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
       List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
       print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
-      var response =  await http.post(
-        'http://10.0.2.2:8000/pasien/',
-        headers: {
-          "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
-          "X-CSRFToken":cookies[0].value
-        },
-        body: {
+      Map<String,dynamic> bodyJson;
+      if (tanggalLahirController.text==""){
+        bodyJson = {
+          "nama":namaController.text,
+          "username":usernameController.text,
+          "password":passwordController.text,
+          "email":emailController.text,
+          "no_hp":noHpController.text,
+          "jenisKelamin":jenisKelamin,
+          "alamat":alamatController.text,
+        };
+      }
+      else{
+        bodyJson = {
           "nama":namaController.text,
           "username":usernameController.text,
           "password":passwordController.text,
@@ -117,7 +124,15 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
           "jenisKelamin":jenisKelamin,
           "alamat":alamatController.text,
           "tanggalLahir":tanggalLahirController.text
-        }
+        };
+      }
+      var response =  await http.post(
+        'http://10.0.2.2:8000/pasien/',
+        headers: {
+          "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+          "X-CSRFToken":cookies[0].value
+        },
+        body: bodyJson
       );
       var body = json.decode(response.body);
       print(body);
