@@ -7,7 +7,7 @@ class DokterHome extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.only(left: 35,right: 35),
       children: <Widget>[
-        Container(height: 120.0,),
+        Container(height: 40.0,),
         Text(
           "Halo\nDokter!",
           style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),

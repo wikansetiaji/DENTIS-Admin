@@ -35,7 +35,7 @@ class _InitialScreenState extends State<InitialScreen> {
                     width: 200,
                     text: "Masuk Sebagai Admin",
                     onTap: (){
-                      Navigator.push(
+                      Navigator.pushReplacement(
                       context, 
                       new MaterialPageRoute(
                           builder: (BuildContext context) =>
@@ -50,7 +50,7 @@ class _InitialScreenState extends State<InitialScreen> {
                     width: 200,
                     text: "Masuk Sebagai Dokter",
                     onTap: (){
-                      Navigator.push(
+                      Navigator.pushReplacement(
                       context, 
                       new MaterialPageRoute(
                           builder: (BuildContext context) =>
@@ -65,7 +65,7 @@ class _InitialScreenState extends State<InitialScreen> {
                     width: 200,
                     text: "Masuk Sebagai Manajer",
                     onTap: (){
-                      Navigator.push(
+                      Navigator.pushReplacement(
                       context, 
                       new MaterialPageRoute(
                           builder: (BuildContext context) =>

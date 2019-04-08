@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Gigi5 extends StatefulWidget {
+  bool ohis = false;
   final String code;
   bool selected = false;
   final VoidCallback onTap;
 
   Gigi5({
+    this.ohis,
     @required this.code,
     @required this.selected,
     @required this.onTap
@@ -23,7 +25,12 @@ class _Gigi5State extends State<Gigi5> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(widget.code),
+          Text(
+            widget.code,
+            style: TextStyle(
+              color: widget.ohis?Colors.red:Colors.black
+            ),
+          ),
           Stack(
             children: <Widget>[
               Container(

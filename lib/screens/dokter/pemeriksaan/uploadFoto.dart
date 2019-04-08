@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'package:async/async.dart';
+import 'package:path/path.dart' as path;
 
 class UploadFoto extends StatefulWidget {
   Map<String, dynamic> data;
@@ -32,7 +34,7 @@ class _UploadFotoState extends State<UploadFoto> {
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
     List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/dokter-login/")));
     
-    print(widget.data);
+    print(widget.data["pasien"]);
 
     var responsePasien =  await http.post(
       'http://10.0.2.2:8000/pasien/',
@@ -40,8 +42,12 @@ class _UploadFotoState extends State<UploadFoto> {
         "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
         "X-CSRFToken":cookies[0].value
       },
-      body: widget.data["pasien"]
+      body: {
+        "nama":widget.data["pasien"]["name"],
+        "jenisKelamin":widget.data["pasien"]["jenisKelamin"]
+      }
     );
+    print(responsePasien.body);
     var bodyPasien = json.decode(responsePasien.body);
     print(bodyPasien);
     
@@ -88,12 +94,13 @@ class _UploadFotoState extends State<UploadFoto> {
     }
     print(list);
 
-    Map<String, dynamic> body = {
+    Map<String, dynamic> bodyO = {
       "idRekamMedis":'${bodyPA["id"]}',
       "gigi": list
     };
-    var bodyJson = json.encode(body);
-    print(bodyJson);
+    var bodyOJson = json.encode(bodyO);
+
+    print(bodyOJson);
     var responseOdon =  await http.post(
       'http://10.0.2.2:8000/odontogram/',
       headers: {
@@ -101,10 +108,50 @@ class _UploadFotoState extends State<UploadFoto> {
         "X-CSRFToken":cookies[0].value,
         "Content-Type":"application/json"
       },
-      body: bodyJson
+      body: bodyOJson
     );
     var bodyOdon = json.decode(responseOdon.body);
     print(bodyOdon);
+
+    print(widget.data["ohis"].values);
+    Map<String, dynamic> bodyOh= {
+      "idRekamMedis":'${bodyPA["id"]}',
+      "kondisi": widget.data["ohis"].values.toList()
+    };
+    var bodyOhJson = json.encode(bodyOh);
+
+    var responseOhis =  await http.post(
+      'http://10.0.2.2:8000/ohis/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+        "X-CSRFToken":cookies[0].value,
+        "Content-Type":"application/json"
+      },
+      body: bodyOhJson
+    );
+    print(responseOhis.body);
+
+    var bodyOhis = json.decode(responseOhis.body);
+
+    if (_image != null){
+      var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
+      var length = await _image.length();
+
+      var uri = Uri.parse('http://10.0.2.2:8000/foto-rontgen/');
+
+      var request = new http.MultipartRequest("POST", uri);
+      request.headers["Cookie"]=cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value;
+      request.headers["X-CSRFToken"]=cookies[0].value;
+      request.fields["idRekamMedis"]='${bodyPA["id"]}';
+      var multipartFile = new http.MultipartFile('foto', stream, length,
+          filename: path.basename(_image.path));
+          //contentType: new MediaType('image', 'png'));
+
+      request.files.add(multipartFile);
+      var response = await request.send();
+      print(response.statusCode);
+    }
+      
     setState(() {
       opacity=0;
     });

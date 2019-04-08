@@ -45,6 +45,9 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/button-dokter.png
+    - assets/button-pasien.png
+    - assets/button-manajer.png
     - assets/logo.png
     - assets/gradient-button.png
     - assets/gradient-footer.png

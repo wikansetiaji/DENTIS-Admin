@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'adminPasiens.dart';
 
 class AdminAkun extends StatefulWidget {
   @override
@@ -20,6 +21,69 @@ class _AdminAkunState extends State<AdminAkun> {
         ),
         centerTitle: true,
         title: Text("DENT-IS",style: TextStyle(color:Colors.black54),),
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(left: 35,right: 35),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(height: 40.0,),
+            Text(
+              "Kelola Akun",
+              style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+            ),
+            Container(height: 30,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context, 
+                      new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                          new AdminPasiens()
+                        )
+                      );
+                  },
+                  child: Container(
+                    height: 122,
+                    width: 122,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/button-pasien.png")
+                      )
+                    ),
+                  ),
+                ),
+                Container(width: 28,),
+                InkWell(
+                  child: Container(
+                    height: 122,
+                    width: 122,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/button-dokter.png")
+                      )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(height: 28,),
+            InkWell(
+              child: Container(
+                height: 122,
+                width: 122,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/button-manajer.png")
+                  )
+                ),
+              ),
+            )
+          ]
+        )
       )
     );
   }

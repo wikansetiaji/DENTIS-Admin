@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 class Statistik extends StatefulWidget {
   @override
@@ -7,95 +13,142 @@ class Statistik extends StatefulWidget {
 
 class _StatistikState extends State<Statistik> {
   String selected ="status";
-  List<Widget> status = [
-    Center(
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: 230,
-            width: 230,
-            color: Colors.blue,
-          )
-        ],
-      )
-    ),
-    Container(height: 10,),
-    ListTile(
-      title: Text("Normal"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Sound"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Caries"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Filled with Caries"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Filled no Caries"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Missing due to Caries"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Missing for Another Reason"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Fissure Sealant"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Fix dental prosthesis / crown, abutment, veneer "),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Unerupted"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Not recorded"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Whitespot"),
-      trailing: Text("77%"),
-    ),
-  ];
+  double height = 0;
+  List<Widget> status=[];
+  List<Widget> ohis=[];
 
-  List<Widget> ohis=[
-    Center(
-      child: Column(
-        children: <Widget>[
-          Container(
-            height: 230,
-            width: 230,
-            color: Colors.blue,
-          )
-        ],
-      )
-    ),
-    Container(height: 10,),
-    ListTile(
-      title: Text("Baik"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Sedang"),
-      trailing: Text("77%"),
-    ),
-    ListTile(
-      title: Text("Buruk"),
-      trailing: Text("77%"),
-    ),
-  ];
+  load()async{
+    setState(() {
+      this.height=MediaQuery.of(context).size.height/2;
+    });
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    
+    PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/dokter-login/")));
+    var responseStatus =  await http.get(
+      'http://10.0.2.2:8000/statistics/kondisi/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    var bodyStatus = json.decode(responseStatus.body);
+    print(bodyStatus);
+    var responseOhis =  await http.get(
+      'http://10.0.2.2:8000/statistics/ohis/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    var bodyOhis = json.decode(responseOhis.body);
+    print(bodyStatus);
+    status = [
+      Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 230,
+              width: 230,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("${bodyStatus["image"]}")
+                )
+              ),
+            )
+          ],
+        )
+      ),
+      Container(height: 10,),
+      ListTile(
+        title: Text("Normal"),
+        trailing: Text("${bodyStatus["result"][0]}"),
+      ),
+      ListTile(
+        title: Text("Sound"),
+        trailing: Text("${bodyStatus["result"][1]}"),
+      ),
+      ListTile(
+        title: Text("Caries"),
+        trailing: Text("${bodyStatus["result"][2]}"),
+      ),
+      ListTile(
+        title: Text("Filled with Caries"),
+        trailing: Text("${bodyStatus["result"][3]}"),
+      ),
+      ListTile(
+        title: Text("Filled no Caries"),
+        trailing: Text("${bodyStatus["result"][4]}"),
+      ),
+      ListTile(
+        title: Text("Missing due to Caries"),
+        trailing: Text("${bodyStatus["result"][5]}"),
+      ),
+      ListTile(
+        title: Text("Missing for Another Reason"),
+        trailing: Text("${bodyStatus["result"][6]}"),
+      ),
+      ListTile(
+        title: Text("Fissure Sealant"),
+        trailing: Text("${bodyStatus["result"][7]}"),
+      ),
+      ListTile(
+        title: Text("Fix dental prosthesis / crown, abutment, veneer "),
+        trailing: Text("${bodyStatus["result"][8]}"),
+      ),
+      ListTile(
+        title: Text("Unerupted"),
+        trailing: Text("${bodyStatus["result"][9]}"),
+      ),
+      ListTile(
+        title: Text("Not recorded"),
+        trailing: Text("${bodyStatus["result"][10]}"),
+      ),
+      ListTile(
+        title: Text("Whitespot"),
+        trailing: Text("${bodyStatus["result"][11]}"),
+      ),
+    ];
+
+    ohis=[
+      Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 230,
+              width: 230,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("${bodyOhis["image"]}")
+                )
+              ),
+            )
+          ],
+        )
+      ),
+      Container(height: 10,),
+      ListTile(
+        title: Text("Baik"),
+        trailing: Text("${bodyStatus["result"][0]}"),
+      ),
+      ListTile(
+        title: Text("Sedang"),
+        trailing: Text("${bodyStatus["result"][1]}"),
+      ),
+      ListTile(
+        title: Text("Buruk"),
+        trailing: Text("${bodyStatus["result"][2]}"),
+      ),
+    ];
+    setState(() {
+      this.height=0.0;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    load();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +158,7 @@ class _StatistikState extends State<Statistik> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(height:73),
+            Container(height:40),
             Text(
               "Statistik",
               style: TextStyle(
@@ -177,9 +230,26 @@ class _StatistikState extends State<Statistik> {
               ],
             ),
             Container(height: 36,),
-            Column(
-              children: selected=="status"?status:ohis,
+            Stack(
+              children: <Widget>[
+                Column(
+                  children: selected=="status"?status:ohis,
+                ),
+                Container(
+                  height: this.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                ),
+                Container(
+                  height: this.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              ],
             ),
+            
           ],
         )
       ],

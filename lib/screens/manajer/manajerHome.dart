@@ -1,32 +1,16 @@
 import 'package:flutter/material.dart';
-import 'dokterHome.dart';
-import 'dokterNews.dart';
-import 'statistik.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:dent_is_admin/screens/initialScreen.dart';
 
-class DokterTabs extends StatefulWidget {
+class ManajerHome extends StatefulWidget {
   @override
-  _DokterTabsState createState() => _DokterTabsState();
+  _ManajerHomeState createState() => _ManajerHomeState();
 }
 
-class _DokterTabsState extends State<DokterTabs> {
-  int _currentIndex = 0;
-  final List<Widget> _children = [
-    DokterHome(),
-    Statistik(),
-    DokterNews()
-  ];
-  
-  void onTabTapped(int index) {
-   setState(() {
-     _currentIndex = index;
-   });
- }
-
+class _ManajerHomeState extends State<ManajerHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +27,7 @@ class _DokterTabsState extends State<DokterTabs> {
               String tempPath = tempDir.path;
               
               PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-              cj.delete(Uri.parse("http://10.0.2.2:8000/dokter-login/"));
+              cj.delete(Uri.parse("http://10.0.2.2:8000/manajer-login/"));
               Navigator.pushReplacement(context, new MaterialPageRoute(
                 builder: (BuildContext context) =>
                 new InitialScreen()
@@ -59,25 +43,20 @@ class _DokterTabsState extends State<DokterTabs> {
           ),
         ],
       ),
-     body: _children[_currentIndex], // new
-     bottomNavigationBar: BottomNavigationBar(
-       onTap: onTabTapped,
-       currentIndex: _currentIndex, // new
-       items: [
-         new BottomNavigationBarItem(
-           icon: Icon(Icons.home),
-           title: Text('Home'),
-         ),
-         new BottomNavigationBarItem(
-           icon: Icon(Icons.trending_up),
-           title: Text('Statistik'),
-         ),
-         new BottomNavigationBarItem(
-           icon: Icon(Icons.library_books),
-           title: Text('Berita')
-         )
-       ],
-     ),
-   );
+      body: Padding(
+        padding: EdgeInsets.only(left: 35,right: 35),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(height: 40.0,),
+            Text(
+              "Halo,\nManajer!",
+              style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+            ),
+            Container(height: 30,),
+          ]
+        )
+      )
+    );
   }
 }

@@ -120,9 +120,9 @@ class _DokterNewsState extends State<DokterNews> {
     return Stack(
       children: <Widget>[
         ListView(
-          padding: EdgeInsets.only(top:51, left:40, right:40),
+          padding: EdgeInsets.only(top:0, left:40, right:40),
           children: <Widget>[
-            Container(height: 50,),
+            Container(height: 40,),
             Text(
               "Dental\nNews",
               style: TextStyle(

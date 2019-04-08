@@ -7,6 +7,9 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'admin/adminHome.dart';
 import 'dokter/dokterTabs.dart';
+import 'initialScreen.dart';
+import 'package:flutter/services.dart';
+import 'manajer/manajerHome.dart';
 
 class LoginScreen extends StatefulWidget {
   final String role;
@@ -70,6 +73,15 @@ class _LoginScreenState extends State<LoginScreen> {
             )
           );
       }
+      else if(widget.role=="manajer"){
+        Navigator.pushReplacement(
+          context, 
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+              new ManajerHome()
+            )
+          );
+      }
 
       setState(() {
         alert="";
@@ -87,93 +99,102 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: Stack(
-        children: <Widget>[
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              FocusScope.of(context).requestFocus(new FocusNode());
-            },
-            child://ListView(
-              //children: [
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  child:Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+    return WillPopScope(
+      onWillPop: (){
+        Navigator.of(context).pushReplacement(new MaterialPageRoute(
+              builder: (BuildContext context) =>
+              new InitialScreen()
+            )
+          );
+      },
+      child: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        body: Stack(
+          children: <Widget>[
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child://ListView(
+                //children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    child:Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(bottom: 10.0),
+                                height: 100.0,
+                                width: 100.0,
+                                decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.contain,image: AssetImage("assets/logo.png"))),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 15),
+                                width: 200,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    labelText: "username",
+                                  ),
+                                  controller: usernameController,
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                width: 200,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    labelText: "password"
+                                  ),
+                                  controller: passwordController,
+                                  obscureText: true,
+                                ),
+                              ),
+                              Text("${alert}",style: TextStyle(color: Colors.red, fontSize: 12),),
+                              Container(height:30),
+                              ButtonGradient(height: 48,width: 100,text: "Masuk",onTap:
+                                login
+                              ),
+                            ],
+                          ),
+                        ),
+                        Stack(
                           children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(bottom: 10.0),
-                              height: 100.0,
-                              width: 100.0,
-                              decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.contain,image: AssetImage("assets/logo.png"))),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 15),
-                              width: 200,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  labelText: "username",
-                                ),
-                                controller: usernameController,
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(bottom: 10),
-                              width: 200,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  labelText: "password"
-                                ),
-                                controller: passwordController,
-                                obscureText: true,
-                              ),
-                            ),
-                            Text("${alert}",style: TextStyle(color: Colors.red, fontSize: 12),),
-                            Container(height:30),
-                            ButtonGradient(height: 48,width: 100,text: "Masuk",onTap:
-                              login
-                            ),
+                            Image.asset("assets/gradient-footer.png"),
                           ],
                         ),
-                      ),
-                      Stack(
-                        children: <Widget>[
-                          Image.asset("assets/gradient-footer.png"),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              //]
-            //),
-          ),
-          new Opacity(
-            opacity: 0.5,
-            child: new Container(
-              color: Colors.black,
-              width: MediaQuery.of(context).size.width,
+                //]
+              //),
+            ),
+            new Opacity(
+              opacity: 0.5,
+              child: new Container(
+                color: Colors.black,
+                width: MediaQuery.of(context).size.width,
+                height: opacity,
+              ),
+            ),
+            new Container(
+              child: new Center(
+                child:new Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                  ],
+                )
+              ),
               height: opacity,
-            ),
-          ),
-          new Container(
-            child: new Center(
-              child:new Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                ],
-              )
-            ),
-            height: opacity,
-          )
-        ],
+            )
+          ],
+        )
       )
     );
   }

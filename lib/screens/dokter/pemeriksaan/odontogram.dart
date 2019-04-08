@@ -21,31 +21,63 @@ class Odontogram extends StatefulWidget {
 
 class _OdontogramState extends State<Odontogram> {
   Map<String, Widget>gigi={};
+  Map<String,dynamic> ohisData;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    print(widget.data["odontogram"]);
+    ohisData = widget.data["ohis"]==null?{"11":{"kode":"11","ci":0,"di":0},"16":{"kode":"16","ci":0,"di":0},"21":{"kode":"21","ci":0,"di":0},"31":{"kode":"31","ci":0,"di":0},"36":{"kode":"36","ci":0,"di":0},"46":{"kode":"46","ci":0,"di":0}}:widget.data["ohis"];
   }
 
   openDetail(String code) async{
+    List<String> ohis=["11","16","21","31","36","46"];
     if (int.parse(code.substring(1))<4){
-      widget.data["odontogram"][code] = await Navigator.push(
-      context, 
-      new MaterialPageRoute(
-          builder: (BuildContext context) =>
-            new DetailGigi4(code:code, conditions: widget.data["odontogram"][code],)
-          )
-      );
+      if (ohis.contains(code)){
+        Map<String,dynamic> res = await Navigator.push(
+          context, 
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                new DetailGigi4(ohisData:ohisData,ohis:true, code:code, conditions: widget.data["odontogram"][code],)
+              )
+          );
+        widget.data["odontogram"][code] = res["condition"];
+        ohisData.addAll({code:res["ohis"]});
+      }
+      else{
+        widget.data["odontogram"][code] = await Navigator.push(
+          context, 
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                new DetailGigi4(ohis:false, code:code, conditions: widget.data["odontogram"][code],)
+              )
+          );
+      }
     }
     else{
-      widget.data["odontogram"][code] = await Navigator.push(
-      context, 
-      new MaterialPageRoute(
-          builder: (BuildContext context) =>
-            new DetailGigi5(code:code, conditions: widget.data["odontogram"][code],)
-          )
-      );
+      if (ohis.contains(code)){
+        Map<String,dynamic> res = await Navigator.push(
+          context, 
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                new DetailGigi5(ohisData:ohisData,ohis:true, code:code, conditions: widget.data["odontogram"][code],)
+              )
+          );
+        widget.data["odontogram"][code] = res["condition"];
+        print(widget.data["odontogram"]);
+        ohisData.addAll({code:res["ohis"]});        
+      }
+      else{
+        widget.data["odontogram"][code] = await Navigator.push(
+          context, 
+          new MaterialPageRoute(
+              builder: (BuildContext context) =>
+                new DetailGigi5(ohis:false, code:code, conditions: widget.data["odontogram"][code],)
+              )
+          );
+      }
     }
     setState(() {
       resetGigiDisplay();
@@ -54,6 +86,7 @@ class _OdontogramState extends State<Odontogram> {
 
   resetGigiDisplay(){
     gigi={};
+    List<String> ohis=["11","16","21","31","36","46"];
     for (var code in widget.data["odontogram"].keys){
       if (int.parse(code.substring(1))<4){
         int sum = 0;
@@ -61,10 +94,20 @@ class _OdontogramState extends State<Odontogram> {
           sum+=i;
         }
         if (sum==-4){
-          gigi.addAll({code:Gigi4(code:code, onTap: (){openDetail(code);}, selected: false,)});
+          if (ohis.contains(code)){
+            gigi.addAll({code:Gigi4(ohis:true, code:code, onTap: (){openDetail(code);}, selected: false,)});
+          }
+          else{
+            gigi.addAll({code:Gigi4(ohis:false, code:code, onTap: (){openDetail(code);}, selected: false,)});
+          }
         }
         else{
-          gigi.addAll({code:Gigi4(code:code, onTap: (){openDetail(code);}, selected: true,)});
+          if (ohis.contains(code)){
+            gigi.addAll({code:Gigi4(ohis:true, code:code, onTap: (){openDetail(code);}, selected: true,)});
+          }
+          else{
+            gigi.addAll({code:Gigi4(ohis:false, code:code, onTap: (){openDetail(code);}, selected: true,)});
+          }
         }
       }
       else{
@@ -73,10 +116,20 @@ class _OdontogramState extends State<Odontogram> {
           sum+=i;
         }
         if (sum==-5){
-          gigi.addAll({code:Gigi5(code:code, onTap:(){openDetail(code);}, selected: false,)});
+          if (ohis.contains(code)){
+            gigi.addAll({code:Gigi5(ohis:true,code:code, onTap:(){openDetail(code);}, selected: false,)});
+          }
+          else{
+            gigi.addAll({code:Gigi5(ohis:false,code:code, onTap:(){openDetail(code);}, selected: false,)});
+          }
         }
         else{
-          gigi.addAll({code:Gigi5(code:code, onTap: (){openDetail(code);}, selected: true,)});
+          if (ohis.contains(code)){
+            gigi.addAll({code:Gigi5(ohis:true,code:code, onTap: (){openDetail(code);}, selected: true,)});
+          }
+          else{
+            gigi.addAll({code:Gigi5(ohis:false,code:code, onTap: (){openDetail(code);}, selected: true,)});
+          }
         }
       }
     }
@@ -231,6 +284,7 @@ class _OdontogramState extends State<Odontogram> {
                   width: 130,
                   text: "Lanjut",
                   onTap: (){
+                    widget.data.addAll({"ohis":ohisData});
                     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
                     Navigator.of(context).push(
                       new MaterialPageRoute(
