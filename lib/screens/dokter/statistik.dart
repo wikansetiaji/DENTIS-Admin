@@ -24,7 +24,7 @@ class _StatistikState extends State<Statistik> {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     
-    PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+    PersistCookieJar cj = new PersistCookieJar(dir:tempPath);
     List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/dokter-login/")));
     var responseStatus =  await http.get(
       'http://10.0.2.2:8000/statistics/kondisi/',
@@ -34,7 +34,7 @@ class _StatistikState extends State<Statistik> {
     );
     var bodyStatus = json.decode(responseStatus.body);
     var listStatus = json.decode(bodyStatus["result"]);
-    print(listStatus[0]);
+    
     var responseOhis =  await http.get(
       'http://10.0.2.2:8000/statistics/ohis/',
       headers: {
@@ -43,6 +43,7 @@ class _StatistikState extends State<Statistik> {
     );
     var bodyOhis = json.decode(responseOhis.body);
     var listOhis = json.decode(bodyOhis["result"]);
+    
     status = [
       Center(
         child: Column(
