@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pemeriksaan/newUser.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DokterHome extends StatelessWidget {
   @override
@@ -56,7 +57,7 @@ class DokterHome extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: (){
+                onTap: ()async{
                   Navigator.push(
                     context, 
                     new MaterialPageRoute(
@@ -64,6 +65,7 @@ class DokterHome extends StatelessWidget {
                         new NewUser()
                       )
                   );
+
                 },
                 child: Container(
                   height: 108,

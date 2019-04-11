@@ -47,8 +47,7 @@ class DataPasien extends StatelessWidget {
                 width: 150,
                 height: 150,
                 decoration: new BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(150))
+                  image: DecorationImage(image: AssetImage("assets/profile-picture.png"))
                 ),
               ),
               Container(height: 31,),

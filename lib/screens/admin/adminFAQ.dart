@@ -160,7 +160,7 @@ class _AdminFAQState extends State<AdminFAQ> {
                         color: Colors.black,
                         onPressed: ()async{
                           await launch(
-                            "mailto:valerysazz@gmail.com?subject=QNA Help"
+                            "mailto:help@dentis.com?subject=QNA Help"
                           );
                         },
                       ),

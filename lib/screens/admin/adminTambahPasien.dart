@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AdminTambahPasien extends StatefulWidget {
   @override
@@ -139,6 +140,15 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
       setState(() {
         height=0;
       });
+      Fluttertoast.showToast(
+        msg: "Pasien berhasil ditambah",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.black45,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
       Navigator.pop(context);
     }
     

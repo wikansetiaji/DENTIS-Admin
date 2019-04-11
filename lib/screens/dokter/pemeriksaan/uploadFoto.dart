@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:async/async.dart';
 import 'package:path/path.dart' as path;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UploadFoto extends StatefulWidget {
   Map<String, dynamic> data;
@@ -157,6 +158,15 @@ class _UploadFotoState extends State<UploadFoto> {
     });
     Navigator.of(context).popUntil(
       (Route<dynamic> r) => r.isFirst
+    );
+    Fluttertoast.showToast(
+      msg: "Pemeriksaan selesai! Rekam medis berhasil disimpan",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.black45,
+      textColor: Colors.white,
+      fontSize: 16.0
     );
   }
 

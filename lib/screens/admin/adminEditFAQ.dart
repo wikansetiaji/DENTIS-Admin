@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AdminEditFAQ extends StatefulWidget {
   final String id;
@@ -61,8 +62,8 @@ class _AdminEditFAQState extends State<AdminEditFAQ> {
       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
       List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
       print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
-      var response =  await http.post(
-        'http://10.0.2.2:8000/faqs/',
+      var response =  await http.patch(
+        'http://10.0.2.2:8000/faqs/${widget.id}/',
         headers: {
           "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
           "X-CSRFToken":cookies[0].value
@@ -77,6 +78,15 @@ class _AdminEditFAQState extends State<AdminEditFAQ> {
       setState(() {
         height=0;
       });
+      Fluttertoast.showToast(
+        msg: "FAQ berhasil diedit",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.black45,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
       Navigator.of(context).pop();
     }
     }
