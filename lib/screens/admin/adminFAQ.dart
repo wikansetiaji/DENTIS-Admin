@@ -8,6 +8,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'adminTambahFAQ.dart';
 import 'adminEditFAQ.dart';
+import 'package:dent_is_admin/screens/error.dart';
 
 class AdminFAQ extends StatefulWidget {
   @override
@@ -18,72 +19,93 @@ class _AdminFAQState extends State<AdminFAQ> {
   double height=0;
   List<Widget> body=[];
 
+  error()async{
+    await Navigator.of(context).pushReplacement(
+      new MaterialPageRoute(
+          builder: (BuildContext context) =>
+          new ErrorScreen()
+        )
+      );
+  }
+
   load()async{
-    setState(() {
-      this.height=MediaQuery.of(context).size.height;
-    });
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-    
-    PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
-    var response =  await http.get(
-      'http://10.0.2.2:8000/faqs/',
-      headers: {
-        "Cookie":cookies[1].name+"="+cookies[1].value
-      },
-    );
-    var body = json.decode(response.body);
-    setState(() {
-      this.height=0;
-    });
-    this.body=[];
-    for (var a in body){
-      this.body.addAll(
-        [
-          Container(
-            margin: EdgeInsets.all(15),
-            padding: EdgeInsets.all(15),
-            width: 330,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              color: Colors.white,
-              border: Border.all(
-                color: Theme.of(context).accentColor,
-                width: 2.0
+    try {
+      setState(() {
+        this.height=MediaQuery.of(context).size.height;
+      });
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+      
+      PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/admin-login/")));
+      var response =  await http.get(
+        'http://api-dentis.herokuapp.com/faqs/',
+        headers: {
+          "Cookie":cookies[1].name+"="+cookies[1].value
+        },
+      );
+      if(response.statusCode!=200 && response.statusCode!=201){
+        await error();
+        setState(() {
+          height=0;
+        });
+        return;
+      }
+      var body = json.decode(response.body);
+      setState(() {
+        this.height=0;
+      });
+      this.body=[];
+      for (var a in body){
+        this.body.addAll(
+          [
+            Container(
+              margin: EdgeInsets.all(15),
+              padding: EdgeInsets.all(15),
+              width: 330,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+                border: Border.all(
+                  color: Theme.of(context).accentColor,
+                  width: 2.0
+                )
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        width: 245,
+                        child: Text(a["question"], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: (){
+                          Navigator.push(
+                            context, 
+                            new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                new AdminEditFAQ(id: a["id"],pertanyaan: a["question"],jawaban:a["answer"])
+                              )
+                            );
+                        },
+                      )
+                    ],
+                  ),
+                  Container(height: 10,),
+                  Text(a["answer"], style: TextStyle(fontSize: 12),)
+                ],
               )
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 245,
-                      child: Text(a["question"], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: (){
-                        Navigator.push(
-                          context, 
-                          new MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                              new AdminEditFAQ(id: a["id"],pertanyaan: a["question"],jawaban:a["answer"])
-                            )
-                          );
-                      },
-                    )
-                  ],
-                ),
-                Container(height: 10,),
-                Text(a["answer"], style: TextStyle(fontSize: 12),)
-              ],
-            )
-          ),
-        ]
-      );
+          ]
+        );
+      }
+    } catch (e) {
+      error();
     }
+    
   }
 
   @override

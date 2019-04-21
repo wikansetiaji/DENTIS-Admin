@@ -6,6 +6,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'dokterNewsWebview.dart';
+import 'package:dent_is_admin/screens/error.dart';
 
 
 class DokterNews extends StatefulWidget {
@@ -16,6 +17,14 @@ class DokterNews extends StatefulWidget {
 class _DokterNewsState extends State<DokterNews> {
   double height=0;
   List<Widget> body=[];
+  error()async{
+    await Navigator.of(context).pushReplacement(
+      new MaterialPageRoute(
+          builder: (BuildContext context) =>
+          new ErrorScreen()
+        )
+      );
+  }
 
   load() async{
     setState(() {
@@ -25,13 +34,16 @@ class _DokterNewsState extends State<DokterNews> {
     String tempPath = tempDir.path;
     
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/dokter-login/")));
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/dokter-login/")));
     var response =  await http.get(
-      'http://10.0.2.2:8000/news/',
+      'http://api-dentis.herokuapp.com/news/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
     );
+    if (response.statusCode!=201 && response.statusCode!=200){
+      error();
+    }
     var body = json.decode(response.body);
     var articles = body["articles"];
     this.body=[];
@@ -117,42 +129,52 @@ class _DokterNewsState extends State<DokterNews> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        ListView(
-          padding: EdgeInsets.only(top:0, left:40, right:40),
-          children: <Widget>[
-            Container(height: 40,),
-            Text(
-              "Dental\nNews",
-              style: TextStyle(
-                fontWeight:FontWeight.bold,
-                fontSize: 40
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/wallpapers/wallpaper1.png"),
+          fit: BoxFit.cover
+        )
+      ),
+      child: Stack(
+        children: <Widget>[
+          ListView(
+            padding: EdgeInsets.only(top:0, left:40, right:40),
+            children: <Widget>[
+              Container(height: 40,),
+              Text(
+                "Dental\nNews",
+                style: TextStyle(
+                  fontWeight:FontWeight.bold,
+                  fontSize: 40
+                ),
               ),
-            ),
-            Container(height: 35,),
-            Stack(
-              children: <Widget>[
-                Column(
-                  children: this.body,
-                ),
-                Container(
-                  height: this.height,
-                  width: MediaQuery.of(context).size.width,
-                ),
-                Container(
-                  height: this.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: CircularProgressIndicator(),
+              Container(height: 35,),
+              Stack(
+                children: <Widget>[
+                  Column(
+                    children: this.body,
                   ),
-                )
-              ],
-            ),
-            
-          ],
-        ),
-      ],
+                  Container(
+                    height: this.height,
+                    width: MediaQuery.of(context).size.width,
+                  ),
+                  Container(
+                    height: this.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                ],
+              ),
+              
+            ],
+          ),
+        ],
+      )
     );
   }
 }

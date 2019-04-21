@@ -29,8 +29,39 @@ class _NewUserState extends State<NewUser> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: (){
-        Navigator.of(context).pop(true);
+      onWillPop: ()async{
+        bool pop = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: Text("Apakah anda ingin kembali ke halaman sebelumnya?"),
+              content: Container(
+                alignment: Alignment.center,
+                height: 37,
+                child: Text("Perubahan yang sudah Anda buat tidak akan disimpan",textAlign: TextAlign.center,),
+              ),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Ya"),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+                new FlatButton(
+                  child: new Text("Tidak"),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+              ],
+            );
+          }
+        );
+        if(pop){
+          Navigator.of(context).pop(true);
+        }
       },
       child:GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -43,8 +74,39 @@ class _NewUserState extends State<NewUser> {
             leading: IconButton(
               color: Colors.black,
               icon: Icon(Icons.arrow_back_ios),
-              onPressed: (){
-                Navigator.of(context).pop(true);
+              onPressed: ()async{
+                bool pop = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // return object of type Dialog
+                    return AlertDialog(
+                      title: Text("Apakah anda ingin kembali ke halaman sebelumnya?"),
+                      content: Container(
+                        alignment: Alignment.center,
+                        height: 37,
+                        child: Text("Perubahan yang sudah Anda buat tidak akan disimpan",textAlign: TextAlign.center,),
+                      ),
+                      actions: <Widget>[
+                        // usually buttons at the bottom of the dialog
+                        new FlatButton(
+                          child: new Text("Ya"),
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                          },
+                        ),
+                        new FlatButton(
+                          child: new Text("Tidak"),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                        ),
+                      ],
+                    );
+                  }
+                );
+                if(pop){
+                  Navigator.of(context).pop(true);
+                }
               },
             ),
             centerTitle: true,

@@ -6,6 +6,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:dent_is_admin/screens/error.dart';
 
 class AdminTambahPasien extends StatefulWidget {
   @override
@@ -19,7 +20,6 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
   TextEditingController namaController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController nomorKTPController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController noHpController = TextEditingController();
   TextEditingController tanggalLahirController = TextEditingController();
@@ -28,12 +28,20 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
   String alertNama="";
   String alertUsername="";
   String alertPassword="";
-  String alertNomorKtp="";
   String alertEmail="";
   String alertNomorTelepon="";
   String alertTanggalLahir="";
   String alertAlamat="";
   DateTime tanggalLahir;
+
+  error()async{
+    await Navigator.of(context).pushReplacement(
+      new MaterialPageRoute(
+          builder: (BuildContext context) =>
+          new ErrorScreen()
+        )
+      );
+  }
 
   bool isNumeric(String s) {
     if(s == null) {
@@ -43,11 +51,11 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
   }
 
   submit()async{
+    try{
     setState(() {
       alertNama="";
       alertUsername="";
       alertPassword="";
-      alertNomorKtp="";
       alertEmail="";
       alertNomorTelepon="";
       alertTanggalLahir="";
@@ -101,7 +109,7 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
       String tempPath = tempDir.path;
       
       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/admin-login/")));
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/admin-login/")));
       print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
       Map<String,dynamic> bodyJson;
       if (tanggalLahirController.text==""){
@@ -128,13 +136,16 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
         };
       }
       var response =  await http.post(
-        'http://10.0.2.2:8000/pasien/',
+        'http://api-dentis.herokuapp.com/pasien/',
         headers: {
           "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
           "X-CSRFToken":cookies[0].value
         },
         body: bodyJson
       );
+      if (response.statusCode!=200 && response.statusCode!=201){
+        error();
+      }
       var body = json.decode(response.body);
       print(body);
       setState(() {
@@ -151,308 +162,358 @@ class _AdminTambahPasienState extends State<AdminTambahPasien> {
       );
       Navigator.pop(context);
     }
+    }
+    catch(e){
+      error();
+    }
     
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              color: Colors.black,
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
+    return WillPopScope(
+      onWillPop: ()async{
+        bool pop = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: Text("Apakah anda ingin kembali ke halaman sebelumnya?"),
+              content: Container(
+                alignment: Alignment.center,
+                height: 37,
+                child: Text("Perubahan yang sudah Anda buat tidak akan disimpan",textAlign: TextAlign.center,),
+              ),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Ya"),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+                new FlatButton(
+                  child: new Text("Tidak"),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+              ],
+            );
+          }
+        );
+        if(pop){
+          Navigator.of(context).pop();
+        }
+              
+      },
+      child:Stack(
+        children: <Widget>[
+          Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              leading: IconButton(
+                color: Colors.black,
+                icon: Icon(Icons.arrow_back_ios),
+                onPressed: ()async{
+                  bool pop = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      // return object of type Dialog
+                      return AlertDialog(
+                        title: Text("Apakah anda ingin kembali ke halaman sebelumnya?"),
+                        content: Container(
+                          alignment: Alignment.center,
+                          height: 37,
+                          child: Text("Perubahan yang sudah Anda buat tidak akan disimpan",textAlign: TextAlign.center,),
+                        ),
+                        actions: <Widget>[
+                          // usually buttons at the bottom of the dialog
+                          new FlatButton(
+                            child: new Text("Ya"),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                          new FlatButton(
+                            child: new Text("Tidak"),
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                  );
+                  if(pop){
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+              centerTitle: true,
+              title: Text("DENT-IS",style: TextStyle(color:Colors.black54),),
             ),
-            centerTitle: true,
-            title: Text("DENT-IS",style: TextStyle(color:Colors.black54),),
-          ),
-          body: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              FocusScope.of(context).requestFocus(new FocusNode());
-            },
-            child:ListView(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(40),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "Tambah Pasien",
-                        style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-                      ),
-                      Container(height: 40,),
-                      new Container(
-                        width: 150,
-                        height: 150,
-                        decoration: new BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.all(Radius.circular(150))
+            body: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child:ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(40),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Tambah Pasien",
+                          style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      Container(height: 20,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(" ${alertNama}",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 325,
-                        child: new TextField(
-                          controller: namaController,
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Nama Lengkap*',
-                            labelText: 'Nama Lengkap*',
+                        Container(height: 40,),
+                        new Container(
+                width: 150,
+                height: 150,
+                decoration: new BoxDecoration(
+                  image: DecorationImage(image: AssetImage("assets/profile-picture.png"))
+                ),
+              ),
+                        Container(height: 20,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" ${alertNama}",style: TextStyle(color: Colors.red),),
+                        ),
+                        Container(
+                          height: 60,
+                          width: 325,
+                          child: new TextField(
+                            controller: namaController,
+                            decoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: new BorderSide(color: Colors.blue)),
+                              hintText: 'Nama Lengkap*',
+                              labelText: 'Nama Lengkap*',
+                            ),
                           ),
                         ),
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(" ${alertUsername}",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 325,
-                        child: new TextField(
-                          controller: usernameController,
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Username*',
-                            labelText: 'Username*',
+                        Container(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" ${alertUsername}",style: TextStyle(color: Colors.red),),
+                        ),
+                        Container(
+                          height: 60,
+                          width: 325,
+                          child: new TextField(
+                            controller: usernameController,
+                            decoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: new BorderSide(color: Colors.blue)),
+                              hintText: 'Username*',
+                              labelText: 'Username*',
+                            ),
                           ),
                         ),
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(" ${alertPassword}",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 325,
-                        child: new TextField(
-                          controller: passwordController,
-                          obscureText: true,
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Password*',
-                            labelText: 'Password*',
+                        Container(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" ${alertPassword}",style: TextStyle(color: Colors.red),),
+                        ),
+                        Container(
+                          height: 60,
+                          width: 325,
+                          child: new TextField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: new BorderSide(color: Colors.blue)),
+                              hintText: 'Password*',
+                              labelText: 'Password*',
+                            ),
                           ),
                         ),
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text("",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 325,
-                        child: new TextField(
-                          keyboardType: TextInputType.numberWithOptions(),
-                          controller: nomorKTPController,
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Nomor KTP',
-                            labelText: 'Nomor KTP',
-                          ),
+                        Container(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text("",style: TextStyle(color: Colors.red),),
                         ),
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text("",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left:10),
-                        alignment: Alignment.centerLeft,
-                        width: 325,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(
-                            color: Colors.grey[600],
+                        Container(
+                          padding: EdgeInsets.only(left:10),
+                          alignment: Alignment.centerLeft,
+                          width: 325,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(
+                              color: Colors.grey[600],
 
-                          )
-                        ),
-                        child: new DropdownButton(
-                          isExpanded: true,
-                          value: jenisKelamin,
-                          items: <DropdownMenuItem<String>>[
-                            DropdownMenuItem(
-                              value: "l",
-                              child: Text("Laki-laki",style: TextStyle(color: Colors.grey[700]),),
-                            ),
-                            DropdownMenuItem(
-                              value: "p",
-                              child: Text("Perempuan",style: TextStyle(color: Colors.grey[700]),),
                             )
-                          ],
-                          onChanged: (String selected){
-                            setState(() {
-                                jenisKelamin = selected;
-                              });
-                          },
-                        )
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(" ${alertEmail}",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 325,
-                        child: new TextField(
-                          controller: emailController,
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Email*',
-                            labelText: 'Email*',
                           ),
-                        ),
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(" ${alertNomorTelepon}",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        height: 60,
-                        width: 325,
-                        child: new TextField(
-                          keyboardType: TextInputType.numberWithOptions(),
-                          controller: noHpController,
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Nomor Telepon',
-                            labelText: 'Nomor Telepon',
-                          ),
-                        ),
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(" ${alertTanggalLahir}",style: TextStyle(color: Colors.red),),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Container(
-                            height: 60,
-                            width: 275,
-                            child: new TextField(
-                              controller: tanggalLahirController,
-                              enabled: false,
-                              decoration: new InputDecoration(
-                                border: new OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                                  borderSide: new BorderSide(color: Colors.blue)),
-                                hintText: 'Tanggal Lahir',
-                                labelText: 'Tanggal Lahir',
+                          child: new DropdownButton(
+                            isExpanded: true,
+                            value: jenisKelamin,
+                            items: <DropdownMenuItem<String>>[
+                              DropdownMenuItem(
+                                value: "l",
+                                child: Text("Laki-laki",style: TextStyle(color: Colors.grey[700]),),
                               ),
-                            ),
-                          ),
-                          Container(width: 5,),
-                          IconButton(
-                            icon: Icon(
-                              Icons.calendar_today
-                            ),
-                            onPressed: ()async{
-                              tanggalLahir=await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2030),
-                              );
-                              tanggalLahirController.text=tanggalLahir.toString().split(" ")[0];
+                              DropdownMenuItem(
+                                value: "p",
+                                child: Text("Perempuan",style: TextStyle(color: Colors.grey[700]),),
+                              )
+                            ],
+                            onChanged: (String selected){
+                              setState(() {
+                                  jenisKelamin = selected;
+                                });
                             },
                           )
-                        ],
-                      ),
-                      Container(height: 10,),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        alignment: Alignment.centerLeft,
-                        child: Text(" $alertAlamat",style: TextStyle(color: Colors.red),),
-                      ),
-                      Container(
-                        height: 80,
-                        width: 325,
-                        child: new TextField(
-                          controller: alamatController,
-                          maxLines: 5,
-                          decoration: new InputDecoration(
-                            border: new OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: new BorderSide(color: Colors.blue)),
-                            hintText: 'Alamat',
-                            labelText: 'Alamat',
+                        ),
+                        Container(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" ${alertEmail}",style: TextStyle(color: Colors.red),),
+                        ),
+                        Container(
+                          height: 60,
+                          width: 325,
+                          child: new TextField(
+                            controller: emailController,
+                            decoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: new BorderSide(color: Colors.blue)),
+                              hintText: 'Email*',
+                              labelText: 'Email*',
+                            ),
                           ),
                         ),
-                      ),
-                      Container(height: 50,),
-                      ButtonGradient(
-                        height: 40,
-                        width: 130,
-                        text: "Simpan",
-                        onTap: (){
-                          submit();
-                        },
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-        ),
-        new Opacity(
-          opacity: 0.5,
-          child: new Container(
-            color: Colors.black,
-            width: MediaQuery.of(context).size.width,
-            height: height,
-          ),
-        ),
-        new Container(
-          child: new Center(
-            child:new Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircularProgressIndicator(),
-              ],
+                        Container(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" ${alertNomorTelepon}",style: TextStyle(color: Colors.red),),
+                        ),
+                        Container(
+                          height: 60,
+                          width: 325,
+                          child: new TextField(
+                            keyboardType: TextInputType.numberWithOptions(),
+                            controller: noHpController,
+                            decoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: new BorderSide(color: Colors.blue)),
+                              hintText: 'Nomor Telepon',
+                              labelText: 'Nomor Telepon',
+                            ),
+                          ),
+                        ),
+                        Container(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" ${alertTanggalLahir}",style: TextStyle(color: Colors.red),),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              height: 60,
+                              width: 275,
+                              child: new TextField(
+                                controller: tanggalLahirController,
+                                enabled: false,
+                                decoration: new InputDecoration(
+                                  border: new OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderSide: new BorderSide(color: Colors.blue)),
+                                  hintText: 'Tanggal Lahir',
+                                  labelText: 'Tanggal Lahir',
+                                ),
+                              ),
+                            ),
+                            Container(width: 5,),
+                            IconButton(
+                              icon: Icon(
+                                Icons.calendar_today
+                              ),
+                              onPressed: ()async{
+                                tanggalLahir=await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime(2030),
+                                );
+                                tanggalLahirController.text=tanggalLahir.toString().split(" ")[0];
+                              },
+                            )
+                          ],
+                        ),
+                        Container(height: 10,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" $alertAlamat",style: TextStyle(color: Colors.red),),
+                        ),
+                        Container(
+                          height: 80,
+                          width: 325,
+                          child: new TextField(
+                            controller: alamatController,
+                            maxLines: 5,
+                            decoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: new BorderSide(color: Colors.blue)),
+                              hintText: 'Alamat',
+                              labelText: 'Alamat',
+                            ),
+                          ),
+                        ),
+                        Container(height: 50,),
+                        ButtonGradient(
+                          height: 40,
+                          width: 130,
+                          text: "Simpan",
+                          onTap: (){
+                            submit();
+                          },
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             )
           ),
-          height: height,
-        )
-      ],
+          new Opacity(
+            opacity: 0.5,
+            child: new Container(
+              color: Colors.black,
+              width: MediaQuery.of(context).size.width,
+              height: height,
+            ),
+          ),
+          new Container(
+            child: new Center(
+              child:new Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                ],
+              )
+            ),
+            height: height,
+          )
+        ],
+      )
     );
   }
 }

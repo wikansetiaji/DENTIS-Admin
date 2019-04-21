@@ -8,51 +8,28 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dent_is_admin/screens/error.dart';
 
-class AdminEditPasien extends StatefulWidget {
-  final String id;
-  final String username;
-  final String email;
-  final String noHp;
-  final String nama;
-  final String jenisKelamin;
-  final String alamat;
-  final String tanggalLahir;
-
-  AdminEditPasien({
-    @required this.id,
-    @required this.username,
-    @required this.email,
-    @required this.noHp,
-    @required this.nama,
-    @required this.jenisKelamin,
-    @required this.alamat,
-    @required this.tanggalLahir
-  });
-
+class AdminEditInstansi extends StatefulWidget {
   @override
-  _AdminEditPasienState createState() => _AdminEditPasienState();
+  _AdminEditInstansiState createState() => _AdminEditInstansiState();
 }
 
-class _AdminEditPasienState extends State<AdminEditPasien> {
-  double height=0;
-
-  String jenisKelamin="l";
-  TextEditingController namaController = TextEditingController();
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController noHpController = TextEditingController();
-  TextEditingController tanggalLahirController = TextEditingController();
-  TextEditingController nomorTeleponController = TextEditingController();
-  TextEditingController alamatController = TextEditingController();
+class _AdminEditInstansiState extends State<AdminEditInstansi> {
+  bool loaded=false;
+  double opacity=0;
+  double white=0;
+  String id;
   String alertNama="";
-  String alertUsername="";
-  String alertPassword="";
-  String alertEmail="";
-  String alertNomorTelepon="";
-  String alertTanggalLahir="";
+  TextEditingController namaController = new TextEditingController();
   String alertAlamat="";
-  DateTime tanggalLahir;
+  TextEditingController alamatController = new TextEditingController();
+  String alertEmail="";
+  TextEditingController emailController = new TextEditingController();
+  String alertTelepon="";
+  TextEditingController teleponController = new TextEditingController();
+  String alertLayanan="";
+  TextEditingController layananController = new TextEditingController();
+  String alertWaktu="";
+  TextEditingController waktuController = new TextEditingController();
 
   error()async{
     await Navigator.of(context).pushReplacement(
@@ -62,53 +39,79 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
         )
       );
   }
-  
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    namaController.text=widget.nama;
-    usernameController.text=widget.username;
-    emailController.text=widget.email;
-    noHpController.text=widget.noHp;
-    tanggalLahirController.text=widget.tanggalLahir;
-    alamatController.text=widget.alamat;
-    jenisKelamin=widget.jenisKelamin;
-  }
 
-  bool isNumeric(String s) {
-    if(s == null) {
-      return false;
+  load()async{
+    try {
+      setState(() {
+        this.white=MediaQuery.of(context).size.height;
+      });
+      Directory tempDir = await getTemporaryDirectory();
+      String tempPath = tempDir.path;
+      
+      PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/admin-login/")));
+      var response =  await http.get(
+        'http://api-dentis.herokuapp.com/instansi/',
+        headers: {
+          "Cookie":cookies[1].name+"="+cookies[1].value
+        },
+      );
+      if(response.statusCode!=200 && response.statusCode!=201){
+        await error();
+        setState(() {
+          white=0;
+        });
+        return;
+      }
+      var body = json.decode(response.body)[0];
+      print(body);
+      setState(() {
+        id=body["id"];
+        namaController.text=body["nama"];
+        alamatController.text=body["alamat"];
+        emailController.text=body["emailInstansi"];
+        teleponController.text=body["noTelepon"];
+        layananController.text=body["layanan"];
+        waktuController.text=body["waktuLayanan"];
+        this.white=0;
+      });
+    } catch (e) {
+      print(e);
+      error();
     }
-    return double.parse(s, (e) => null) != null;
   }
 
   submit()async{
     try {
+      bool pass=true;
       setState(() {
         alertNama="";
-        alertUsername="";
-        alertPassword="";
-        alertEmail="";
-        alertNomorTelepon="";
-        alertTanggalLahir="";
         alertAlamat="";
+        alertEmail="";
+        alertTelepon="";
+        alertLayanan="";
+        alertWaktu="";
       });
-      bool pass = true;
       String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
       RegExp regExp = new RegExp(p);
       if (namaController.text==""){
-        pass= false;
         setState(() {
           alertNama="Wajib diisi";
         });
+        pass=false;
       }
-      if(usernameController.text==""){
-        pass= false;
+      if (alamatController.text==""){
         setState(() {
-          alertUsername="Wajib diisi";
+          alertAlamat="Wajib diisi";
         });
+        pass=false;
+      }
+      if (emailController.text==""){
+        setState(() {
+          alertEmail="Wajib diisi";
+        });
+        pass=false;
       }
       if(!regExp.hasMatch(emailController.text)){
         pass= false;
@@ -116,15 +119,28 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
           alertEmail="Format Salah";
         });
       }
-      if(emailController.text==""){
-        pass= false;
+      if (teleponController.text==""){
         setState(() {
-          alertEmail="Wajib diisi";
+          alertTelepon="Wajib diisi";
         });
+        pass=false;
       }
+      if (layananController.text==""){
+        setState(() {
+          alertLayanan="Wajib diisi";
+        });
+        pass=false;
+      }
+      if (waktuController.text==""){
+        setState(() {
+          alertWaktu="Wajib diisi";
+        });
+        pass=false;
+      }
+
       if (pass){
         setState(() {
-          height=MediaQuery.of(context).size.height;
+          opacity=MediaQuery.of(context).size.height;
         });
         Directory tempDir = await getTemporaryDirectory();
         String tempPath = tempDir.path;
@@ -133,36 +149,31 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
         List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/admin-login/")));
         print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
         var response =  await http.patch(
-          'http://api-dentis.herokuapp.com/pasien/${widget.id}/',
+          'http://api-dentis.herokuapp.com/instansi/$id/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value
           },
           body: {
             "nama":namaController.text,
-            "username":usernameController.text,
-            "password":passwordController.text,
-            "email":emailController.text,
-            "no_hp":noHpController.text,
-            "jenisKelamin":jenisKelamin,
             "alamat":alamatController.text,
-            "tanggalLahir":tanggalLahirController.text
+            "noTelepon":teleponController.text,
+            "layanan":layananController.text,
+            "waktuLayanan":waktuController.text,
+            "emailInstansi":emailController.text
           }
         );
         if (response.statusCode!=200 && response.statusCode!=201){
-          await error();
-          setState(() {
-            height=0;
-          });
+          error();
           return;
         }
         var body = json.decode(response.body);
         print(body);
         setState(() {
-          height=0;
+          opacity=0;
         });
         Fluttertoast.showToast(
-          msg: "Pasien berhasil diedit",
+          msg: "Instansi berhasil diubah",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
@@ -175,7 +186,16 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
     } catch (e) {
       error();
     }
-    
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if (!loaded){
+      load();
+    }
+    loaded=true;
   }
 
   @override
@@ -266,25 +286,16 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
               onTap: () {
                 FocusScope.of(context).requestFocus(new FocusNode());
               },
-              child:ListView(
+              child: ListView(
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.all(40),
                     child: Column(
                       children: <Widget>[
                         Text(
-                          "Ubah Pasien",
+                          "Ubah Instansi",
                           style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                         ),
-                        Container(height: 40,),
-                        new Container(
-                width: 150,
-                height: 150,
-                decoration: new BoxDecoration(
-                  image: DecorationImage(image: AssetImage("assets/profile-picture.png"))
-                ),
-              ),
-                        Container(height: 20,),
                         Container(
                           padding: EdgeInsets.all(5),
                           alignment: Alignment.centerLeft,
@@ -299,8 +310,8 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                               border: new OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                 borderSide: new BorderSide(color: Colors.blue)),
-                              hintText: 'Nama Lengkap*',
-                              labelText: 'Nama Lengkap*',
+                              hintText: 'Nama Instansi*',
+                              labelText: 'Nama Instansi*',
                             ),
                           ),
                         ),
@@ -308,81 +319,24 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                         Container(
                           padding: EdgeInsets.all(5),
                           alignment: Alignment.centerLeft,
-                          child: Text(" ${alertUsername}",style: TextStyle(color: Colors.red),),
+                          child: Text(" $alertAlamat",style: TextStyle(color: Colors.red),),
                         ),
                         Container(
-                          height: 60,
+                          height: 80,
                           width: 325,
                           child: new TextField(
-                            controller: usernameController,
+                            controller: alamatController,
+                            maxLines: 5,
                             decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                 borderSide: new BorderSide(color: Colors.blue)),
-                              hintText: 'Username*',
-                              labelText: 'Username*',
+                              hintText: 'Alamat*',
+                              labelText: 'Alamat*',
                             ),
                           ),
                         ),
-                        Container(height: 10,),
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(" ${alertPassword}",style: TextStyle(color: Colors.red),),
-                        ),
-                        Container(
-                          height: 60,
-                          width: 325,
-                          child: new TextField(
-                            controller: passwordController,
-                            obscureText: true,
-                            decoration: new InputDecoration(
-                              border: new OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: new BorderSide(color: Colors.blue)),
-                              hintText: 'Password (Unchanged)',
-                              labelText: 'Password (Unchanged)',
-                            ),
-                          ),
-                        ),
-                        Container(height: 10,),
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          alignment: Alignment.centerLeft,
-                          child: Text("",style: TextStyle(color: Colors.red),),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(left:10),
-                          alignment: Alignment.centerLeft,
-                          width: 325,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(
-                              color: Colors.grey[600],
-
-                            )
-                          ),
-                          child: new DropdownButton(
-                            isExpanded: true,
-                            value: jenisKelamin,
-                            items: <DropdownMenuItem<String>>[
-                              DropdownMenuItem(
-                                value: "l",
-                                child: Text("Laki-laki",style: TextStyle(color: Colors.grey[700]),),
-                              ),
-                              DropdownMenuItem(
-                                value: "p",
-                                child: Text("Perempuan",style: TextStyle(color: Colors.grey[700]),),
-                              )
-                            ],
-                            onChanged: (String selected){
-                              setState(() {
-                                  jenisKelamin = selected;
-                                });
-                            },
-                          )
-                        ),
-                        Container(height: 10,),
+                        Container(height: 50,),
                         Container(
                           padding: EdgeInsets.all(5),
                           alignment: Alignment.centerLeft,
@@ -406,20 +360,20 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                         Container(
                           padding: EdgeInsets.all(5),
                           alignment: Alignment.centerLeft,
-                          child: Text(" ${alertNomorTelepon}",style: TextStyle(color: Colors.red),),
+                          child: Text(" ${alertTelepon}",style: TextStyle(color: Colors.red),),
                         ),
                         Container(
                           height: 60,
                           width: 325,
                           child: new TextField(
-                            keyboardType: TextInputType.numberWithOptions(),
-                            controller: noHpController,
+                            controller: teleponController,
+                            keyboardType: TextInputType.phone,
                             decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                 borderSide: new BorderSide(color: Colors.blue)),
-                              hintText: 'Nomor Telepon',
-                              labelText: 'Nomor Telepon',
+                              hintText: 'Nomor Telepon*',
+                              labelText: 'Nomor Telepon*',
                             ),
                           ),
                         ),
@@ -427,60 +381,40 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                         Container(
                           padding: EdgeInsets.all(5),
                           alignment: Alignment.centerLeft,
-                          child: Text(" ${alertTanggalLahir}",style: TextStyle(color: Colors.red),),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Container(
-                              height: 60,
-                              width: 275,
-                              child: new TextField(
-                                controller: tanggalLahirController,
-                                enabled: false,
-                                decoration: new InputDecoration(
-                                  border: new OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                                    borderSide: new BorderSide(color: Colors.blue)),
-                                  hintText: 'Tanggal Lahir',
-                                  labelText: 'Tanggal Lahir',
-                                ),
-                              ),
-                            ),
-                            Container(width: 5,),
-                            IconButton(
-                              icon: Icon(
-                                Icons.calendar_today
-                              ),
-                              onPressed: ()async{
-                                tanggalLahir=await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2030),
-                                );
-                                tanggalLahirController.text=tanggalLahir.toString().split(" ")[0];
-                              },
-                            )
-                          ],
-                        ),
-                        Container(height: 10,),
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          alignment: Alignment.centerLeft,
-                          child: Text(" $alertAlamat",style: TextStyle(color: Colors.red),),
+                          child: Text(" $alertLayanan",style: TextStyle(color: Colors.red),),
                         ),
                         Container(
                           height: 80,
                           width: 325,
                           child: new TextField(
-                            controller: alamatController,
+                            controller: layananController,
                             maxLines: 5,
                             decoration: new InputDecoration(
                               border: new OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                                 borderSide: new BorderSide(color: Colors.blue)),
-                              hintText: 'Alamat',
-                              labelText: 'Alamat',
+                              hintText: 'Layanan*',
+                              labelText: 'Layanan*',
+                            ),
+                          ),
+                        ),
+                        Container(height: 50,),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerLeft,
+                          child: Text(" ${alertWaktu}",style: TextStyle(color: Colors.red),),
+                        ),
+                        Container(
+                          height: 60,
+                          width: 325,
+                          child: new TextField(
+                            controller: waktuController,
+                            decoration: new InputDecoration(
+                              border: new OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: new BorderSide(color: Colors.blue)),
+                              hintText: 'Waktu Layanan*',
+                              labelText: 'Waktu Layanan*',
                             ),
                           ),
                         ),
@@ -493,11 +427,11 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                             submit();
                           },
                         )
-                      ],
-                    ),
+                      ]
+                    )
                   )
                 ],
-              ),
+              )
             )
           ),
           new Opacity(
@@ -505,7 +439,7 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
             child: new Container(
               color: Colors.black,
               width: MediaQuery.of(context).size.width,
-              height: height,
+              height: opacity,
             ),
           ),
           new Container(
@@ -518,9 +452,21 @@ class _AdminEditPasienState extends State<AdminEditPasien> {
                 ],
               )
             ),
-            height: height,
+            height: opacity,
+          ),
+          Container(
+            height: this.white,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+          ),
+          Container(
+            height: this.white,
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           )
-        ],
+        ]
       )
     );
   }

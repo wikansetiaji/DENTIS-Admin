@@ -49,6 +49,7 @@ flutter:
     - assets/button-dokter.png
     - assets/button-pasien.png
     - assets/button-manajer.png
+    - assets/button-instansi.png
     - assets/logo.png
     - assets/gradient-button.png
     - assets/gradient-footer.png
@@ -61,8 +62,8 @@ flutter:
     - assets/line.png
     - assets/odontogram/gigi4kecil.png
     - assets/odontogram/gigi5kecil.png
-    - assets/odontogram/gigi5kecilselected.png
-    - assets/odontogram/gigi4kecilselected.png
+    - assets/odontogram/gigi5kecilselected.png 
+    - assets/odontogram/gigi4kecilselected.png 
     - assets/detailGigi/gigi5/bg.png
     - assets/detailGigi/gigi5/d.png
     - assets/detailGigi/gigi5/l.png
@@ -79,6 +80,10 @@ flutter:
     - assets/tabs/ohis.png
     - assets/tabs/ohis-selected.png
     - assets/profile-picture.png
+    - assets/error.png
+    - assets/wallpapers/wallpaper1.png 
+    - assets/wallpapers/wallpaper2.png
+    - assets/wallpapers/wallpaper3.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

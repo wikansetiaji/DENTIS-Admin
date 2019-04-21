@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
       opacity=MediaQuery.of(context).size.height;
     });
     var response =  await http.post(
-      'http://10.0.2.2:8000/${widget.role}-login/',
+      'http://api-dentis.herokuapp.com/${widget.role}-login/',
       headers: {
         "Content-Type":"application/x-www-form-urlencoded",
       },
@@ -47,12 +47,12 @@ class _LoginScreenState extends State<LoginScreen> {
       String tempPath = tempDir.path;
       
       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-      cj.delete(Uri.parse("http://10.0.2.2:8000/${widget.role}-login/"));
+      cj.delete(Uri.parse("http://api-dentis.herokuapp.com/${widget.role}-login/"));
       print(response.headers["set-cookie"].split(",")[0].split(";")[0].split("=")[1]);
       Cookie csrf = Cookie(response.headers["set-cookie"].split(",")[0].split(";")[0].split("=")[0],response.headers["set-cookie"].split(",")[0].split(";")[0].split("=")[1]);
       Cookie sessionid = Cookie(response.headers["set-cookie"].split(",")[2].split(";")[0].split("=")[0],response.headers["set-cookie"].split(",")[2].split(";")[0].split("=")[1]);
-      cj.saveFromResponse(Uri.parse("http://10.0.2.2:8000/${widget.role}-login/"), [csrf,sessionid]);
-      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/${widget.role}-login/")));
+      cj.saveFromResponse(Uri.parse("http://api-dentis.herokuapp.com/${widget.role}-login/"), [csrf,sessionid]);
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/${widget.role}-login/")));
       print("this is the cookies: ${cookies}");
       
       if (widget.role=="admin"){
