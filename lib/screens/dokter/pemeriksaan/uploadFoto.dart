@@ -81,7 +81,9 @@ class _UploadFotoState extends State<UploadFoto> {
             "d":widget.data["odontogram"][item]["d"],
             "l":widget.data["odontogram"][item]["l"],
             "m":widget.data["odontogram"][item]["m"],
-            "v":widget.data["odontogram"][item]["v"]
+            "v":widget.data["odontogram"][item]["v"],
+            "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
+            "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
           });
         }
         else{
@@ -91,7 +93,9 @@ class _UploadFotoState extends State<UploadFoto> {
             "l":widget.data["odontogram"][item]["l"],
             "o":widget.data["odontogram"][item]["o"],
             "m":widget.data["odontogram"][item]["m"],
-            "v":widget.data["odontogram"][item]["v"]
+            "v":widget.data["odontogram"][item]["v"],
+            "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
+            "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
           });
         }
       }
@@ -114,9 +118,12 @@ class _UploadFotoState extends State<UploadFoto> {
         body: bodyOJson
       );
       var bodyOdon = json.decode(responseOdon.body);
+      print("===========");
       print(bodyOdon);
+      print("===========");
 
-      print(widget.data["ohis"].values);
+      
+      print(widget.data["ohis"]);
       Map<String, dynamic> bodyOh= {
         "idRekamMedis":'${bodyPA["id"]}',
         "kondisi": widget.data["ohis"].values.toList()
@@ -182,6 +189,7 @@ class _UploadFotoState extends State<UploadFoto> {
         fontSize: 16.0
       );
     } catch (e) {
+      print(e);
       setState(() {
         opacity=0;
       });
