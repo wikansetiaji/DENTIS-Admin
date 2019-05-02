@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:dent_is_admin/screens/initialScreen.dart';
 import 'dart:convert';
+import 'package:dent_is_admin/screens/error.dart';
 
 class ManajerHome extends StatefulWidget {
   @override
@@ -19,7 +20,17 @@ class _ManajerHomeState extends State<ManajerHome> {
   List<Widget> pengunjung=[];
   List<Widget> body;
 
+  error()async{
+    await Navigator.of(context).pushReplacement(
+      new MaterialPageRoute(
+          builder: (BuildContext context) =>
+          new ErrorScreen()
+        )
+      );
+  }
+
   load()async{
+    try{
     setState(() {
       this.height=MediaQuery.of(context).size.height/2;
     });
@@ -27,9 +38,9 @@ class _ManajerHomeState extends State<ManajerHome> {
     String tempPath = tempDir.path;
     
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/manajer-login/")));
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/")));
     var responseStatus =  await http.get(
-      'http://10.0.2.2:8000/statistics/kondisi/',
+      'http://api-dentis.herokuapp.com/statistics/kondisi/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -38,7 +49,7 @@ class _ManajerHomeState extends State<ManajerHome> {
     var listStatus = json.decode(bodyStatus["result"]);
     print(listStatus[0]);
     var responseOhis =  await http.get(
-      'http://10.0.2.2:8000/statistics/ohis/',
+      'http://api-dentis.herokuapp.com/statistics/ohis/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -46,7 +57,7 @@ class _ManajerHomeState extends State<ManajerHome> {
     var bodyOhis = json.decode(responseOhis.body);
     var listOhis = json.decode(bodyOhis["result"]);
     var responsePengunjung =  await http.get(
-      'http://10.0.2.2:8000/statistics/pengunjung/',
+      'http://api-dentis.herokuapp.com/statistics/pengunjung/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -63,7 +74,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                 width: 300,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("http://10.0.2.2:8000${bodyPengunjung["image"]}")
+                    image: NetworkImage("http://api-dentis.herokuapp.com${bodyPengunjung["image"]}")
                   )
                 ),
               )
@@ -109,7 +120,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                 width: 300,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("http://10.0.2.2:8000${bodyStatus["image"]}")
+                    image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatus["image"]}")
                   )
                 ),
               )
@@ -176,7 +187,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                 width: 300,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("http://10.0.2.2:8000${bodyOhis["image"]}")
+                    image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhis["image"]}")
                   )
                 ),
               )
@@ -202,6 +213,10 @@ class _ManajerHomeState extends State<ManajerHome> {
       body=status;
       this.height=0.0;
     });
+    }
+    catch(e){
+      error();
+    }
   }
   
   @override
@@ -232,7 +247,7 @@ class _ManajerHomeState extends State<ManajerHome> {
               String tempPath = tempDir.path;
               
               PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-              cj.delete(Uri.parse("http://10.0.2.2:8000/manajer-login/"));
+              cj.delete(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/"));
               Navigator.pushReplacement(context, new MaterialPageRoute(
                 builder: (BuildContext context) =>
                 new InitialScreen()
@@ -248,76 +263,87 @@ class _ManajerHomeState extends State<ManajerHome> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.only(left: 35,right: 35),
-        child: ListView(
-          children: <Widget>[
-            Container(height: 40.0,),
-            Text(
-              "Halo,\nManajer!",
-              style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-            ),
-            Container(height: 30,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(height:10),
-                new DropdownButton(
-                  isExpanded: true,
-                  value: selected,
-                  items: <DropdownMenuItem<String>>[
-                    DropdownMenuItem(
-                      value: "status",
-                      child: Text("Status",style: TextStyle(color: Colors.grey[700]),),
-                    ),
-                    DropdownMenuItem(
-                      value: "ohis",
-                      child: Text("Ohis",style: TextStyle(color: Colors.grey[700]),),
-                    ),
-                    DropdownMenuItem(
-                      value: "pengunjung",
-                      child: Text("Pengunjung",style: TextStyle(color: Colors.grey[700]),),
-                    )
-                  ],
-                  onChanged: (String a){
-                    setState(() {
-                      selected=a; 
-                      if(a=="pengunjung"){
-                        body=pengunjung;
-                      }
-                      else if(a=="ohis"){
-                        body=ohis;
-                      }
-                      else{
-                        body=status;
-                      }
-                    });
-                  },
-                ),
-                Container(height: 10,),
-                Stack(
-                  children: <Widget>[
-                    Column(
-                      children: body,
-                    ),
-                    Container(
-                      height: this.height,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                    ),
-                    Container(
-                      height: this.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: CircularProgressIndicator(),
+      body:  Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/wallpapers/wallpaper3.png"),
+            fit: BoxFit.cover
+          )
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(0),
+          child: ListView(
+            padding: EdgeInsets.only(left: 35,right: 35),
+            children: <Widget>[
+              Container(height: 40.0,),
+              Text(
+                "Halo,\nManajer!",
+                style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+              ),
+              Container(height: 30,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(height:10),
+                  new DropdownButton(
+                    isExpanded: true,
+                    value: selected,
+                    items: <DropdownMenuItem<String>>[
+                      DropdownMenuItem(
+                        value: "status",
+                        child: Text("Status",style: TextStyle(color: Colors.grey[700]),),
                       ),
-                    )
-                  ],
-                ),
-                
-              ],
-            )
-          ]
+                      DropdownMenuItem(
+                        value: "ohis",
+                        child: Text("Ohis",style: TextStyle(color: Colors.grey[700]),),
+                      ),
+                      DropdownMenuItem(
+                        value: "pengunjung",
+                        child: Text("Pengunjung",style: TextStyle(color: Colors.grey[700]),),
+                      )
+                    ],
+                    onChanged: (String a){
+                      setState(() {
+                        selected=a; 
+                        if(a=="pengunjung"){
+                          body=pengunjung;
+                        }
+                        else if(a=="ohis"){
+                          body=ohis;
+                        }
+                        else{
+                          body=status;
+                        }
+                      });
+                    },
+                  ),
+                  Container(height: 10,),
+                  Stack(
+                    children: <Widget>[
+                      Column(
+                        children: body,
+                      ),
+                      Container(
+                        height: this.height,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.white,
+                      ),
+                      Container(
+                        height: this.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    ],
+                  ),
+                  
+                ],
+              )
+            ]
+          )
         )
       )
     );

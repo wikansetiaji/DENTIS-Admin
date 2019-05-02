@@ -43,7 +43,7 @@ class _DokterTabsState extends State<DokterTabs> {
               String tempPath = tempDir.path;
               
               PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-              cj.delete(Uri.parse("http://10.0.2.2:8000/dokter-login/"));
+              cj.delete(Uri.parse("http://api-dentis.herokuapp.com/dokter-login/"));
               Navigator.pushReplacement(context, new MaterialPageRoute(
                 builder: (BuildContext context) =>
                 new InitialScreen()

@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:dent_is_admin/screens/error.dart';
 
 class Statistik extends StatefulWidget {
   @override
@@ -17,17 +18,32 @@ class _StatistikState extends State<Statistik> {
   List<Widget> status=[];
   List<Widget> ohis=[];
 
+  error()async{
+    await Navigator.of(context).pushReplacement(
+      new MaterialPageRoute(
+          builder: (BuildContext context) =>
+          new ErrorScreen()
+        )
+      );
+  }
+
   load()async{
+    try{
     setState(() {
       this.height=MediaQuery.of(context).size.height/2;
     });
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     
+<<<<<<< HEAD
     PersistCookieJar cj = new PersistCookieJar(dir:tempPath);
     List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://10.0.2.2:8000/dokter-login/")));
+=======
+    PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/dokter-login/")));
+>>>>>>> 70033ab7f715dc97bd3d91d48de21399fb78e21a
     var responseStatus =  await http.get(
-      'http://10.0.2.2:8000/statistics/kondisi/',
+      'http://api-dentis.herokuapp.com/statistics/kondisi/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -36,7 +52,7 @@ class _StatistikState extends State<Statistik> {
     var listStatus = json.decode(bodyStatus["result"]);
     
     var responseOhis =  await http.get(
-      'http://10.0.2.2:8000/statistics/ohis/',
+      'http://api-dentis.herokuapp.com/statistics/ohis/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -53,7 +69,7 @@ class _StatistikState extends State<Statistik> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://10.0.2.2:8000${bodyStatus["image"]}")
+                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatus["image"]}")
                 )
               ),
             )
@@ -120,7 +136,7 @@ class _StatistikState extends State<Statistik> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://10.0.2.2:8000${bodyOhis["image"]}")
+                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhis["image"]}")
                 )
               ),
             )
@@ -144,6 +160,10 @@ class _StatistikState extends State<Statistik> {
     setState(() {
       this.height=0.0;
     });
+    }
+    catch(e){
+      error();
+    }
   }
 
   @override
@@ -154,107 +174,117 @@ class _StatistikState extends State<Statistik> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.only(left:40,right:40),
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(height:40),
-            Text(
-              "Statistik",
-              style: TextStyle(
-                fontSize: 40,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-            Container(height: 40,),
-            Row(
-              children: <Widget>[
-                InkWell(
-                  onTap: (){
-                    setState(() {
-                      selected="status";
-                    });
-                  },
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        width: 165,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/tabs/status-selected.png")
-                          )
-                        ),
-                      ),
-                      Container(
-                        width: 165,
-                        height: selected=="ohis"?40:0,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/tabs/status.png")
-                          )
-                        ),
-                      ),
-                    ],
-                  )
-                ),
-                InkWell(
-                  onTap: (){
-                    setState(() {
-                      selected="ohis";
-                    });
-                  },
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        width: 165,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/tabs/ohis.png")
-                          )
-                        ),
-                      ),
-                      Container(
-                        width: 165,
-                        height: selected=="ohis"?40:0,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/tabs/ohis-selected.png")
-                          )
-                        ),
-                      ),
-                    ],
-                  )
-                ),
-              ],
-            ),
-            Container(height: 36,),
-            Stack(
-              children: <Widget>[
-                Column(
-                  children: selected=="status"?status:ohis,
-                ),
-                Container(
-                  height: this.height,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.white,
-                ),
-                Container(
-                  height: this.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              ],
-            ),
-            
-          ],
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/wallpapers/wallpaper3.png"),
+          fit: BoxFit.cover
         )
-      ],
+      ),
+      child: ListView(
+        padding: EdgeInsets.only(left:40,right:40),
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(height:40),
+              Text(
+                "Statistik",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              Container(height: 40,),
+              Row(
+                children: <Widget>[
+                  InkWell(
+                    onTap: (){
+                      setState(() {
+                        selected="status";
+                      });
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          width: 165,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/tabs/status-selected.png")
+                            )
+                          ),
+                        ),
+                        Container(
+                          width: 165,
+                          height: selected=="ohis"?40:0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/tabs/status.png")
+                            )
+                          ),
+                        ),
+                      ],
+                    )
+                  ),
+                  InkWell(
+                    onTap: (){
+                      setState(() {
+                        selected="ohis";
+                      });
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          width: 165,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/tabs/ohis.png")
+                            )
+                          ),
+                        ),
+                        Container(
+                          width: 165,
+                          height: selected=="ohis"?40:0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/tabs/ohis-selected.png")
+                            )
+                          ),
+                        ),
+                      ],
+                    )
+                  ),
+                ],
+              ),
+              Container(height: 36,),
+              Stack(
+                children: <Widget>[
+                  Column(
+                    children: selected=="status"?status:ohis,
+                  ),
+                  Container(
+                    height: this.height,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.white,
+                  ),
+                  Container(
+                    height: this.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                ],
+              ),
+              
+            ],
+          )
+        ],
+      )
     );
   }
 }
