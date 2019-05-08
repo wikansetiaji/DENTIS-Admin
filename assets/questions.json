@@ -1,0 +1,169 @@
+{
+    "tf":[
+        {
+            "no":"1",
+            "pertanyaan":"Gigi yang sehat adalah gigi yang bersih dan tidak berlubang."
+            
+        },
+        {
+            "no":"2",
+            "pertanyaan":"Sakit gigi disebabkan karena malas menggosok gigi?"
+            
+        },
+        {
+            "no":"3",
+            "pertanyaan":"Makan cokelat dan permen yang berlebihan dapat menyebabkan sakit gigi."
+            
+        },
+        {
+            "no":"4",
+            "pertanyaan":"Sakit gigi dapat menyebabkan sakit kepala, bau mulut, dan sulit untuk tidur."
+            
+        },
+        {
+            "no":"5",
+            "pertanyaan":"Gigi berlubah merupakan salah satu masalah kesehatan gigi."
+            
+        },
+        {
+            "no":"6",
+            "pertanyaan":"Menggosok gigi minimal 2 kali sehari setelah makan dan sebelum tidur."
+            
+        },
+        {
+            "no":"7",
+            "pertanyaan":"Menggosok gigi cukup dilakukan saat mandi pagi dan sore hari."
+            
+        },
+        {
+            "no":"8",
+            "pertanyaan":"Sikat gigi yang benar adalah yang ujung sikatnya kecil dan pipih sehingga dapat menjangkau bagian belakang gigi."
+            
+        },
+        {
+            "no":"9",
+            "pertanyaan":"Sikat gigi tidak perlu diganti secara rutin."
+            
+        },
+        {
+            "no":"10",
+            "pertanyaan":"Satu sikat gigi boleh dipakai oleh banyak orang (ayah. ibu, kakak, adik)."
+            
+        },
+        {
+            "no":"11",
+            "pertanyaan":"Menggosok gigi sebaiknya dilakukan dengan lembut."
+            
+        },
+        {
+            "no":"12",
+            "pertanyaan":"Saat menggosok gigi permukaan gusi dan lidah tidak perlu disikat."
+            
+        },
+        {
+            "no":"13",
+            "pertanyaan":"Menggosok gigi yang benar adalah menggosok seluruh bagian gigi (depan, belakang, sela-sela gigi)."
+            
+        },
+        {
+            "no":"14",
+            "pertanyaan":"Setelah menggosok gigi tidak harus berkumur dengan air yang bersih."
+            
+        },
+        {
+            "no":"15",
+            "pertanyaan":"Menggosok gigi tidak perlu menggunakan pasta gigi (odol) ber-fluoride (odol yang rasanya mint dan terasa dingin setelah menggunakannya)."
+            
+        },
+        {
+            "no":"16",
+            "pertanyaan":"Susu, keju, yogurt dapat menguatkan gigi. "
+            
+        },
+        {
+            "no":"17",
+            "pertanyaan":"Setelah makan cokelat dan permen tidak perlu menggosok gigi."
+            
+        },
+        {
+            "no":"18",
+            "pertanyaan":"Pemeriksaan gigi ke dokter gigi dilakukan jika gigi saya sakit saja."
+            
+        },
+        {
+            "no":"19",
+            "pertanyaan":"Pemeriksaan gigi sebaiknya dilakukan setiap 6 bulan sekali."
+            
+        }
+    ],
+    "range":[
+        {
+            "no":"1",
+            "pertanyaan":"Saya pernah merasa sakit gigi."
+        },
+        {
+            "no":"2",
+            "pertanyaan":"Saya menggosok gigi jika disuruh oleh orang tua, jika tidak saya tidak menggosok gigi."
+        },
+        {
+            "no":"3",
+            "pertanyaan":"Saya menggosok gigi setelah makan."
+        },
+        {
+            "no":"4",
+            "pertanyaan":"Saya menggosok gigi sebelum tidur."
+        },
+        {
+            "no":"5",
+            "pertanyaan":"Saya memakai sikat gigi sendiri saat menggosok gigi."
+        },
+        {
+            "no":"6",
+            "pertanyaan":"Saya berkumur setelah makan."
+        },
+        {
+            "no":"7",
+            "pertanyaan":"Saat menggosok gigi, saya juga menggosok gusi dan lidah."
+        },
+        {
+            "no":"8",
+            "pertanyaan":" Saya menggosok gigi dengan lembut."
+        },
+        {
+            "no":"9",
+            "pertanyaan":"Saya menggosok gigi bagian depan dengan gerakkan ke atas dan ke bawah (naik turun)"
+        },
+        {
+            "no":"10",
+            "pertanyaan":"Saya juga menggosok seluruh bagian gigi dengan gerakan memutar."
+        },
+        {
+            "no":"11",
+            "pertanyaan":"Saya menggosok seluruh bagian mulut (depan, belakang, sela-sela gigi)."
+        },
+        {
+            "no":"12",
+            "pertanyaan":"Saya menggosok gigi menggunakan pasta gigi (odol) ber-fluoride (odol yang rasanya mint dan terasa dingin setelah menggunakannya)."
+        },
+        {
+            "no":"13",
+            "pertanyaan":"Saya minum susu setiap hari."
+        },
+        {
+            "no":"14",
+            "pertanyaan":"Saya makan keju setiap hari."
+        },
+        {
+            "no":"15",
+            "pertanyaan":"Setelah makan permen, cokelat, roti, es krim, kemudian saya menggosok gigi."
+        },
+        {
+            "no":"16",
+            "pertanyaan":"Saya pernah periksa gigi ke dokter gigi."
+        },
+        {
+            "no":"17",
+            "pertanyaan":"Walaupun gigi saya tidak sakit, orang tua saya memeriksakan gigi saya ke dokter gigi (minimal 6 bulan sekali)."
+        }
+    ]
+}

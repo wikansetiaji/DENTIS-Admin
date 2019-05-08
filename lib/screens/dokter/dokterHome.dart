@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'pemeriksaan/newUser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dent_is_admin/screens/error.dart';
+import 'survey/surveyScreen.dart';
 
 class DokterHome extends StatelessWidget {
   @override
@@ -103,26 +104,37 @@ class DokterHome extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  height: 108,
-                  width: 90,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(image: AssetImage("assets/kuisioner.png"))
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context, 
+                      new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                          new SurveyScreen()
+                        )
+                    );
+                  },
+                  child: Container(
+                    height: 108,
+                    width: 90,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(image: AssetImage("assets/kuisioner.png"))
+                          ),
                         ),
-                      ),
-                      Container(
-                        height: 13,
-                      ),
-                      Text("Kuisioner",textAlign: TextAlign.center,)
-                    ],
-                  ),
-                )
+                        Container(
+                          height: 13,
+                        ),
+                        Text("Kuisioner",textAlign: TextAlign.center,)
+                      ],
+                    ),
+                  )
+                ),
               ],
             ),
           ),

@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'adminTambahPasien.dart';
 import 'adminEditPasien.dart';
 import 'package:dent_is_admin/screens/error.dart';
+import 'adminAppointment.dart';
 
 class AdminPasiens extends StatefulWidget {
   @override
@@ -59,9 +60,21 @@ class _AdminPasiensState extends State<AdminPasiens> {
             ListTile(
               title: Text("$temp.   ${i["nama"]}"),
               trailing: Container(
-                width: 100,
+                width: 150,
                 child: Row(
                   children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.calendar_today),
+                      onPressed: (){
+                        Navigator.push(
+                            context, 
+                            new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                new AdminAppointment(idPasien: i["id"],)
+                              )
+                            );
+                      }
+                    ),
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: (){
@@ -139,7 +152,7 @@ class _AdminPasiensState extends State<AdminPasiens> {
                           load();
                         }
                       },
-                    )
+                    ),
                   ],
                 ),
               )

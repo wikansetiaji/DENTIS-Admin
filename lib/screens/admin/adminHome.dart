@@ -104,43 +104,7 @@ class AdminHome extends StatelessWidget {
                 ),
               ),
               Container(height: 30,),
-              ButtonCard(
-                onTap: (){
-                  
-                },
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: AssetImage("assets/appointments.png"))
-                      ),
-                    ),
-                    Container(width:10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(height: 10,),
-                        Text(
-                          "Appointment",
-                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
-                        ),
-                        Container(height: 4,),
-                        Container(
-                          width: 200,
-                          height: 30,
-                          child: Text(
-                            "Buat appointment baru atau kelola appointment yang sudah ada",
-                            style: TextStyle(fontSize: 12),
-                          )
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(height: 30,),
+              
               ButtonCard(
                 onTap: (){
                   Navigator.push(
