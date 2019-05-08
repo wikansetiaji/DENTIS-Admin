@@ -45,7 +45,7 @@ class _StatistikState extends State<Statistik> {
     );
     var bodyStatus = json.decode(responseStatus.body);
     var listStatus = json.decode(bodyStatus["result"]);
-    print(listStatus[0]);
+    
     var responseOhis =  await http.get(
       'http://api-dentis.herokuapp.com/statistics/ohis/',
       headers: {
@@ -54,6 +54,7 @@ class _StatistikState extends State<Statistik> {
     );
     var bodyOhis = json.decode(responseOhis.body);
     var listOhis = json.decode(bodyOhis["result"]);
+    
     status = [
       Center(
         child: Column(
