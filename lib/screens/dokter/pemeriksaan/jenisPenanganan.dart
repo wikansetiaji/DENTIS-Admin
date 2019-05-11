@@ -21,11 +21,11 @@ class _JenisPenangananState extends State<JenisPenanganan> {
   String alert="";
   Map<String,bool> penanganan = {
     "dhe":false,
-    "cpp":false,
-    "protection":false,
-    "fissureseal":false,
+    "cpp_acp":false,
+    "sp":false,
+    "fs":false,
     "art":false,
-    "ekstraksi":false,
+    "eks":false,
     "lainnya":false
   };
 
@@ -98,10 +98,10 @@ class _JenisPenangananState extends State<JenisPenanganan> {
                     onChanged: (bool value){
                       setState(() {
                         FocusScope.of(context).requestFocus(new FocusNode());
-                        penanganan["cpp"]=value;
+                        penanganan["cpp_acp"]=value;
                       });
                     },
-                    value: penanganan["cpp"],
+                    value: penanganan["cpp_acp"],
                     title: new Text('Aplikasi CPP ACP'),
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
@@ -109,10 +109,10 @@ class _JenisPenangananState extends State<JenisPenanganan> {
                     onChanged: (bool value){
                       setState(() {
                         FocusScope.of(context).requestFocus(new FocusNode());
-                        penanganan["protection"]=value;
+                        penanganan["sp"]=value;
                       });
                     },
-                    value: penanganan["protection"],
+                    value: penanganan["sp"],
                     title: new Text('Surface Protection'),
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
@@ -120,10 +120,10 @@ class _JenisPenangananState extends State<JenisPenanganan> {
                     onChanged: (bool value){
                       setState(() {
                         FocusScope.of(context).requestFocus(new FocusNode());
-                        penanganan["fissureseal"]=value;
+                        penanganan["fs"]=value;
                       });
                     },
-                    value: penanganan["fissureseal"],
+                    value: penanganan["fs"],
                     title: new Text('Fissure Sealant'),
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
@@ -142,10 +142,10 @@ class _JenisPenangananState extends State<JenisPenanganan> {
                     onChanged: (bool value){
                       setState(() {
                         FocusScope.of(context).requestFocus(new FocusNode());
-                        penanganan["ekstraksi"]=value;
+                        penanganan["eks"]=value;
                       });
                     },
-                    value: penanganan["ekstraksi"],
+                    value: penanganan["eks"],
                     title: new Text('Pencabutan / Ekstraksi'),
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
@@ -200,12 +200,24 @@ class _JenisPenangananState extends State<JenisPenanganan> {
                           }
                         }
                       if (pass){
+                        Map<String,dynamic> penangananFinal = {
+                          "dhe":penanganan["dhe"],
+                          "cpp_acp":penanganan["cpp_acp"],
+                          "sp":penanganan["sp"],
+                          "fs":penanganan["fs"],
+                          "art":penanganan["art"],
+                          "eks":penanganan["eks"],
+                          "lainnya":lainnyaController.text
+                        };
                         widget.data.addAll({"penanganan":<String>[]});
                         for (var a in penanganan.keys){
                           if (penanganan[a]){
                             widget.data["penanganan"].add(a);
                           }
                         }
+                        widget.data.addAll({
+                          "penangananFinal":penangananFinal
+                        });
                         Navigator.of(context).push(
                           new MaterialPageRoute(
                             builder: (BuildContext context) =>

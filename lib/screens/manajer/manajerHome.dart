@@ -6,6 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:dent_is_admin/screens/initialScreen.dart';
 import 'dart:convert';
 import 'package:dent_is_admin/screens/error.dart';
+import 'package:dent_is_admin/components/buttonGradient.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:dent_is_admin/utils/utils.dart';
+
 
 class ManajerHome extends StatefulWidget {
   @override
@@ -13,12 +17,14 @@ class ManajerHome extends StatefulWidget {
 }
 
 class _ManajerHomeState extends State<ManajerHome> {
+  double opacity=0;
   String selected ="status";
   double height = 0;
   List<Widget> status=[];
   List<Widget> ohis=[];
   List<Widget> pengunjung=[];
   List<Widget> body;
+  List<Widget> rekamMedis=[];
 
   error()async{
     await Navigator.of(context).pushReplacement(
@@ -209,6 +215,96 @@ class _ManajerHomeState extends State<ManajerHome> {
         ),
       ];
     });
+
+    var responseRekamMedis =  await http.get(
+        'http://api-dentis.herokuapp.com/rekam-medis/',
+        headers: {
+          "Cookie":cookies[1].name+"="+cookies[1].value
+        },
+      );
+      if(responseRekamMedis.statusCode!=200 && responseRekamMedis.statusCode!=201){
+        await error();
+        setState(() {
+          height=0;
+        });
+        return;
+      }
+      var listRekamMedis = json.decode(responseRekamMedis.body);
+      setState(() {
+        this.height=0;
+      });
+      this.rekamMedis=[];
+      for (var a in listRekamMedis){
+        this.rekamMedis.addAll(
+          [
+            InkWell(
+              onTap: (){
+                pdfRekamMedis(a["id"].toString());
+              },
+              child: Container(
+                margin: EdgeInsets.all(15),
+                padding: EdgeInsets.all(15),
+                width: 330,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Theme.of(context).accentColor,
+                    width: 2.0
+                  )
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Colors.grey,
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            a["fotorontgen_set"].length!=0?"http://api-dentis.herokuapp.com${a["fotorontgen_set"][0]["foto"]}":""
+                          ),
+                          fit: BoxFit.fitWidth
+                        )
+                      ),
+                    ),
+                    Container(
+                      width: 15,
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: Text("${a["pasien"]["nama"]}", style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                          ),
+                          Container(height: 10,),
+                          Container(
+                            child: Text("${a["dokter"]["nama"]}", style: TextStyle(fontSize: 12),)
+                          ),
+                          Container(
+                            child: Text("${Util.convertToDateString(a["created_at"].split("T")[0])}", style: TextStyle(fontSize: 12),)
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.file_download),
+                      onPressed: (){
+                      },
+                    )
+                  ],
+                ),
+              )
+            ),
+          ]
+        );
+      }
+
     setState(() {
       body=status;
       this.height=0.0;
@@ -217,6 +313,68 @@ class _ManajerHomeState extends State<ManajerHome> {
     catch(e){
       error();
     }
+  }
+
+  pdfManajer()async{
+    setState(() {
+      opacity=MediaQuery.of(context).size.height;
+    });
+    print("mulai");
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    
+    PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/")));
+    var responseStatus =  await http.get(
+      'http://api-dentis.herokuapp.com/report/manajer',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    print(responseStatus.statusCode);
+    if (responseStatus.statusCode==200){
+      print("oke");
+      await launch(
+        "http://api-dentis.herokuapp.com/media/manajer_report.pdf"
+      );
+    }
+    else{
+      error();
+    }
+    setState(() {
+      opacity=0;
+    });
+  }
+
+  pdfRekamMedis(String id)async{
+    setState(() {
+      opacity=MediaQuery.of(context).size.height;
+    });
+    print("mulai");
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    
+    PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/")));
+    var responseStatus =  await http.get(
+      'http://api-dentis.herokuapp.com/report/rekam-medis/$id/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    print(responseStatus.statusCode);
+    if (responseStatus.statusCode==200){
+      print("oke");
+      await launch(
+        "http://api-dentis.herokuapp.com/media/rekam_medis/$id.pdf"
+      );
+    }
+    else{
+      error();
+    }
+    setState(() {
+      opacity=0;
+    });
   }
   
   @override
@@ -233,119 +391,164 @@ class _ManajerHomeState extends State<ManajerHome> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title: Text("DENT-IS",style: TextStyle(color:Colors.black54),),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert,color: Colors.black,),
-            padding: EdgeInsets.zero,
-            onSelected: (String a)async{
-              Directory tempDir = await getTemporaryDirectory();
-              String tempPath = tempDir.path;
-              
-              PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-              cj.delete(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/"));
-              Navigator.pushReplacement(context, new MaterialPageRoute(
-                builder: (BuildContext context) =>
-                new InitialScreen()
-              )
-            );
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-              PopupMenuItem<String>(
-                value: "logout",
-                child: const Text('Logout'),
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            centerTitle: true,
+            title: Text("DENT-IS",style: TextStyle(color:Colors.black54),),
+            actions: <Widget>[
+              PopupMenuButton<String>(
+                icon: Icon(Icons.more_vert,color: Colors.black,),
+                padding: EdgeInsets.zero,
+                onSelected: (String a)async{
+                  Directory tempDir = await getTemporaryDirectory();
+                  String tempPath = tempDir.path;
+                  
+                  PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
+                  cj.delete(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/"));
+                  Navigator.pushReplacement(context, new MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                    new InitialScreen()
+                  )
+                );
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                  PopupMenuItem<String>(
+                    value: "logout",
+                    child: const Text('Logout'),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-      body:  Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/wallpapers/wallpaper3.png"),
-            fit: BoxFit.cover
+          body:  Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/wallpapers/wallpaper3.png"),
+                fit: BoxFit.cover
+              )
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(0),
+              child: ListView(
+                padding: EdgeInsets.only(left: 35,right: 35),
+                children: <Widget>[
+                  Container(height: 40.0,),
+                  Text(
+                    "Halo,\nManajer!",
+                    style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+                  ),
+                  Container(height: 15,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children:<Widget>[
+                        ButtonGradient(
+                        height: 50,
+                        width: 250,
+                        text: "Download Laporan Statistika",
+                        onTap: (){
+                          pdfManajer();
+                        },
+                      )
+                    ]
+                  ),
+                  Container(height: 15,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(height:10),
+                      new DropdownButton(
+                        isExpanded: true,
+                        value: selected,
+                        items: <DropdownMenuItem<String>>[
+                          DropdownMenuItem(
+                            value: "status",
+                            child: Text("Status",style: TextStyle(color: Colors.grey[700]),),
+                          ),
+                          DropdownMenuItem(
+                            value: "ohis",
+                            child: Text("Ohis",style: TextStyle(color: Colors.grey[700]),),
+                          ),
+                          DropdownMenuItem(
+                            value: "pengunjung",
+                            child: Text("Pengunjung",style: TextStyle(color: Colors.grey[700]),),
+                          ),
+                          DropdownMenuItem(
+                            value: "rekamMedis",
+                            child: Text("Rekam Medis",style: TextStyle(color: Colors.grey[700]),),
+                          )
+                        ],
+                        onChanged: (String a){
+                          setState(() {
+                            selected=a; 
+                            if(a=="pengunjung"){
+                              body=pengunjung;
+                            }
+                            else if(a=="ohis"){
+                              body=ohis;
+                            }
+                            else if (a=="status"){
+                              body=status;
+                            }
+                            else{
+                              body = rekamMedis;
+                            }
+                          });
+                        },
+                      ),
+                      Container(height: 10,),
+                      Stack(
+                        children: <Widget>[
+                          Column(
+                            children: body,
+                          ),
+                          Container(
+                            height: this.height,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.white,
+                          ),
+                          Container(
+                            height: this.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        ],
+                      ),
+                      
+                    ],
+                  )
+                ]
+              )
+            )
           )
         ),
-        child: Padding(
-          padding: EdgeInsets.all(0),
-          child: ListView(
-            padding: EdgeInsets.only(left: 35,right: 35),
-            children: <Widget>[
-              Container(height: 40.0,),
-              Text(
-                "Halo,\nManajer!",
-                style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-              ),
-              Container(height: 30,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(height:10),
-                  new DropdownButton(
-                    isExpanded: true,
-                    value: selected,
-                    items: <DropdownMenuItem<String>>[
-                      DropdownMenuItem(
-                        value: "status",
-                        child: Text("Status",style: TextStyle(color: Colors.grey[700]),),
-                      ),
-                      DropdownMenuItem(
-                        value: "ohis",
-                        child: Text("Ohis",style: TextStyle(color: Colors.grey[700]),),
-                      ),
-                      DropdownMenuItem(
-                        value: "pengunjung",
-                        child: Text("Pengunjung",style: TextStyle(color: Colors.grey[700]),),
-                      )
-                    ],
-                    onChanged: (String a){
-                      setState(() {
-                        selected=a; 
-                        if(a=="pengunjung"){
-                          body=pengunjung;
-                        }
-                        else if(a=="ohis"){
-                          body=ohis;
-                        }
-                        else{
-                          body=status;
-                        }
-                      });
-                    },
-                  ),
-                  Container(height: 10,),
-                  Stack(
-                    children: <Widget>[
-                      Column(
-                        children: body,
-                      ),
-                      Container(
-                        height: this.height,
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.white,
-                      ),
-                      Container(
-                        height: this.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    ],
-                  ),
-                  
-                ],
-              )
-            ]
-          )
+        new Opacity(
+          opacity: 0.5,
+          child: new Container(
+            color: Colors.black,
+            width: MediaQuery.of(context).size.width,
+            height: this.opacity,
+          ),
+        ),
+        new Container(
+          child: new Center(
+            child:new Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(),
+              ],
+            )
+          ),
+          height: this.opacity,
         )
-      )
+      ],
     );
   }
 }

@@ -20,9 +20,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
   double height=0;
   int page = 1;
   List<bool> tfAlert=[];
-  List<String> tfAnswer=[];
+  List<int> tfAnswer=[];
   List<bool> rangeAlert=[];
-  List<String> rangeAnswer=[];
+  List<int> rangeAnswer=[];
   Map<String,dynamic> questions;
   ScrollController _controller = ScrollController();
 
@@ -40,7 +40,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
       setState(() {
         height=MediaQuery.of(context).size.height;
       });
-      List<Map<String,String>> list=[];
+      List<Map<String,dynamic>> list=[];
       int temp=0;
       for (var item in tfAnswer) {
         temp++;
@@ -104,11 +104,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
   load()async{
     if (tfAnswer.length==0){
       for (var i = 0; i < 19; i++) {
-        tfAnswer.add("");
+        tfAnswer.add(null);
         tfAlert.add(false);
       }
       for (var i = 0; i < 17; i++) {
-        rangeAnswer.add("");
+        rangeAnswer.add(null);
         rangeAlert.add(false);
       }
     }
@@ -144,7 +144,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
               Row(
                 children: <Widget>[
                   new Radio(
-                    value: "t",
+                    value: 1,
                     groupValue: this.tfAnswer[no-1],
                     onChanged: (value){
                       setState(() {
@@ -161,7 +161,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     ),
                     onTap: (){
                       setState(() {
-                        this.tfAnswer[no-1] = "t";
+                        this.tfAnswer[no-1] = 1;
                       });
                       print(this.tfAnswer);
                     },
@@ -169,7 +169,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                   
                   Container(width: 15,),
                   new Radio(
-                    value: "f",
+                    value: 0,
                     groupValue: this.tfAnswer[no-1],
                     onChanged: (value){
                       setState(() {
@@ -186,7 +186,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     ),
                     onTap: (){
                       setState(() {
-                        this.tfAnswer[no-1] = "f";
+                        this.tfAnswer[no-1] = 0;
                       });
                       print(this.tfAnswer);
                     },
@@ -230,7 +230,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     child: Row(
                       children: <Widget>[
                         new Radio(
-                          value: "0",
+                          value: 0,
                           groupValue: this.rangeAnswer[no-1],
                           onChanged: (value){
                             setState(() {
@@ -247,7 +247,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           ),
                           onTap: (){
                             setState(() {
-                              this.rangeAnswer[no-1] = "0";
+                              this.rangeAnswer[no-1] = 0;
                             });
                             print(this.rangeAnswer);
                           },
@@ -260,7 +260,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     child: Row(
                       children: <Widget>[
                         new Radio(
-                          value: "2",
+                          value: 2,
                           groupValue: this.rangeAnswer[no-1],
                           onChanged: (value){
                             setState(() {
@@ -277,7 +277,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           ),
                           onTap: (){
                             setState(() {
-                              this.rangeAnswer[no-1] = "2";
+                              this.rangeAnswer[no-1] = 2;
                             });
                             print(this.rangeAnswer);
                           },
@@ -294,7 +294,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     child: Row(
                       children: <Widget>[
                         new Radio(
-                          value: "1",
+                          value: 1,
                           groupValue: this.rangeAnswer[no-1],
                           onChanged: (value){
                             setState(() {
@@ -311,7 +311,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           ),
                           onTap: (){
                             setState(() {
-                              this.rangeAnswer[no-1] = "1";
+                              this.rangeAnswer[no-1] = 1;
                             });
                             print(this.rangeAnswer);
                           },
@@ -324,7 +324,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                     child: Row(
                       children: <Widget>[
                         new Radio(
-                          value: "3",
+                          value: 3,
                           groupValue: this.rangeAnswer[no-1],
                           onChanged: (value){
                             setState(() {
@@ -341,7 +341,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           ),
                           onTap: (){
                             setState(() {
-                              this.rangeAnswer[no-1] = "3";
+                              this.rangeAnswer[no-1] = 3;
                             });
                             print(this.rangeAnswer);
                           },
@@ -532,7 +532,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           if (page<5){
                             for (var i = ((1+(this.page-1)*5)-1); i < ((this.page)*5); i++) {
                               try {
-                                if (tfAnswer[i]==""){
+                                if (tfAnswer[i]==null){
                                   setState(() {
                                     tfAlert[i]=true;
                                     pass=false;
@@ -545,7 +545,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           else{
                             for (var i = ((1+(this.page-4-1)*5)-1); i < ((this.page-4)*5); i++) {
                               try {
-                                if (rangeAnswer[i]==""){
+                                if (rangeAnswer[i]==null){
                                   setState(() {
                                     rangeAlert[i]=true;
                                     pass=false;

@@ -39,139 +39,312 @@ class _UploadFotoState extends State<UploadFoto> {
       
       print(widget.data["pasien"]);
 
-      var responsePasien =  await http.post(
-        'http://api-dentis.herokuapp.com/pasien/',
-        headers: {
-          "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
-          "X-CSRFToken":cookies[0].value
-        },
-        body: {
-          "nama":widget.data["pasien"]["name"],
-          "jenisKelamin":widget.data["pasien"]["jenisKelamin"]
+      if (widget.data["isAppointment"]){
+        Map<String,dynamic>bodyMap = {
+          "idPasien":"${widget.data["pasien"]["id"]}",
+          "anamnesa":widget.data["rekamMedis"]["anamnesa"],
+          "alergi":widget.data["rekamMedis"]["alergi"],
+          "riwayatPenyakit":widget.data["rekamMedis"]["riwayatPenyakit"],
+          "tekananDarah":widget.data["rekamMedis"]["tekananDarah"],
+          "berat":widget.data["rekamMedis"]["berat"],
+          "tinggi":widget.data["rekamMedis"]["tinggi"],
+          "idAppointment":"${widget.data["idAppointment"]}",
+          "penanganan":widget.data["penangananFinal"]
+        };
+
+        var bodyJson = json.encode(bodyMap);
+
+        var responsePA =  await http.post(
+          'http://api-dentis.herokuapp.com/pemeriksaanAwal/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+          body: bodyJson
+        );
+        var bodyPA = json.decode(responsePA.body);
+        print(bodyPA);
+
+        List<Map<String,dynamic>> list = [];
+        for (var item in widget.data["odontogram"].keys) {
+          if(widget.data["odontogram"][item]["o"]==null){
+            list.add({
+              "kode":item,
+              "d":widget.data["odontogram"][item]["d"],
+              "l":widget.data["odontogram"][item]["l"],
+              "m":widget.data["odontogram"][item]["m"],
+              "v":widget.data["odontogram"][item]["v"],
+              "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
+              "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
+            });
+          }
+          else{
+            list.add({
+              "kode":item,
+              "d":widget.data["odontogram"][item]["d"],
+              "l":widget.data["odontogram"][item]["l"],
+              "o":widget.data["odontogram"][item]["o"],
+              "m":widget.data["odontogram"][item]["m"],
+              "v":widget.data["odontogram"][item]["v"],
+              "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
+              "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
+            });
+          }
         }
-      );
-      print(responsePasien.body);
-      var bodyPasien = json.decode(responsePasien.body);
-      print(bodyPasien);
-      
-      var responsePA =  await http.post(
-        'http://api-dentis.herokuapp.com/pemeriksaanAwal/',
-        headers: {
-          "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
-          "X-CSRFToken":cookies[0].value
-        },
-        body: {
+        print(list);
+
+        Map<String, dynamic> bodyO = {
+          "idRekamMedis":'${bodyPA["id"]}',
+          "gigi": list
+        };
+        var bodyOJson = json.encode(bodyO);
+
+        print(bodyOJson);
+        var responseOdon =  await http.post(
+          'http://api-dentis.herokuapp.com/odontogram/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+          body: bodyOJson
+        );
+        var bodyOdon = json.decode(responseOdon.body);
+        print("===========");
+        print(bodyOdon);
+        print("===========");
+
+        
+        print(widget.data["ohis"]);
+        Map<String, dynamic> bodyOh= {
+          "idRekamMedis":'${bodyPA["id"]}',
+          "kondisi": widget.data["ohis"].values.toList()
+        };
+        var bodyOhJson = json.encode(bodyOh);
+
+        var responseOhis =  await http.post(
+          'http://api-dentis.herokuapp.com/ohis/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+          body: bodyOhJson
+        );
+        print(responseOhis.body);
+        
+
+        var bodyOhis = json.decode(responseOhis.body);
+
+        print(bodyOhis);
+
+        if (_image != null){
+          var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
+          var length = await _image.length();
+
+          var uri = Uri.parse('http://api-dentis.herokuapp.com/foto-rontgen/');
+
+          var request = new http.MultipartRequest("POST", uri);
+          request.headers["Cookie"]=cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value;
+          request.headers["X-CSRFToken"]=cookies[0].value;
+          request.fields["idRekamMedis"]='${bodyPA["id"]}';
+          var multipartFile = new http.MultipartFile('foto', stream, length,
+              filename: path.basename(_image.path));
+              //contentType: new MediaType('image', 'png'));
+
+          request.files.add(multipartFile);
+          var response = await request.send();
+          print(response.statusCode);
+          if (response.statusCode!=200 && response.statusCode!=201){
+            Navigator.push(
+              context, 
+              new MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                  new ErrorScreen()
+                )
+            );
+            return;
+          }
+        }
+      }
+      else{
+        var responsePasien =  await http.post(
+          'http://api-dentis.herokuapp.com/pasien/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value
+          },
+          body: {
+            "nama":widget.data["pasien"]["nama"],
+            "jenisKelamin":widget.data["pasien"]["jenisKelamin"]
+          }
+        );
+        print(responsePasien.body);
+        var bodyPasien = json.decode(responsePasien.body);
+        print("bodyPasien");
+        
+        var bodyMap={
           "idPasien":"$bodyPasien",
           "anamnesa":widget.data["rekamMedis"]["anamnesa"],
           "alergi":widget.data["rekamMedis"]["alergi"],
           "riwayatPenyakit":widget.data["rekamMedis"]["riwayatPenyakit"],
           "tekananDarah":widget.data["rekamMedis"]["tekananDarah"],
           "berat":widget.data["rekamMedis"]["berat"],
-          "tinggi":widget.data["rekamMedis"]["tinggi"]
-        }
-      );
-      var bodyPA = json.decode(responsePA.body);
-      print(bodyPA);
+          "tinggi":widget.data["rekamMedis"]["tinggi"],
+          "penanganan":widget.data["penangananFinal"]
+        };
 
-      List<Map<String,dynamic>> list = [];
-      for (var item in widget.data["odontogram"].keys) {
-        if(widget.data["odontogram"][item]["o"]==null){
-          list.add({
-            "kode":item,
-            "d":widget.data["odontogram"][item]["d"],
-            "l":widget.data["odontogram"][item]["l"],
-            "m":widget.data["odontogram"][item]["m"],
-            "v":widget.data["odontogram"][item]["v"],
-            "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
-            "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
-          });
+        var bodyJson = json.encode(bodyMap);
+        var responsePA =  await http.post(
+          'http://api-dentis.herokuapp.com/pemeriksaanAwal/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+          body: bodyJson
+        );
+        var bodyPA = json.decode(responsePA.body);
+        print(bodyPA);
+
+        List<Map<String,dynamic>> list = [];
+        for (var item in widget.data["odontogram"].keys) {
+          if(widget.data["odontogram"][item]["o"]==null){
+            list.add({
+              "kode":item,
+              "d":widget.data["odontogram"][item]["d"],
+              "l":widget.data["odontogram"][item]["l"],
+              "m":widget.data["odontogram"][item]["m"],
+              "v":widget.data["odontogram"][item]["v"],
+              "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
+              "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
+            });
+          }
+          else{
+            list.add({
+              "kode":item,
+              "d":widget.data["odontogram"][item]["d"],
+              "l":widget.data["odontogram"][item]["l"],
+              "o":widget.data["odontogram"][item]["o"],
+              "m":widget.data["odontogram"][item]["m"],
+              "v":widget.data["odontogram"][item]["v"],
+              "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
+              "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
+            });
+          }
         }
-        else{
-          list.add({
-            "kode":item,
-            "d":widget.data["odontogram"][item]["d"],
-            "l":widget.data["odontogram"][item]["l"],
-            "o":widget.data["odontogram"][item]["o"],
-            "m":widget.data["odontogram"][item]["m"],
-            "v":widget.data["odontogram"][item]["v"],
-            "di":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["di"]:null,
-            "ci":widget.data["ohis"][item]!=null?widget.data["ohis"][item]["ci"]:null,
+        print(list);
+
+        Map<String, dynamic> bodyO = {
+          "idRekamMedis":'${bodyPA["id"]}',
+          "gigi": list
+        };
+        var bodyOJson = json.encode(bodyO);
+
+        print(bodyOJson);
+        var responseOdon =  await http.post(
+          'http://api-dentis.herokuapp.com/odontogram/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+          body: bodyOJson
+        );
+        var bodyOdon = json.decode(responseOdon.body);
+        print("===========");
+        print(bodyOdon);
+        print("===========");
+
+        
+        print(widget.data["ohis"]);
+        Map<String, dynamic> bodyOh= {
+          "idRekamMedis":'${bodyPA["id"]}',
+          "kondisi": widget.data["ohis"].values.toList()
+        };
+        var bodyOhJson = json.encode(bodyOh);
+
+        var responseOhis =  await http.post(
+          'http://api-dentis.herokuapp.com/ohis/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+          body: bodyOhJson
+        );
+        print(responseOhis.body);
+        
+
+        var bodyOhis = json.decode(responseOhis.body);
+
+        print(bodyOhis);
+
+        var responseJadwal =  await http.get(
+          'http://api-dentis.herokuapp.com/jadwal-praktek-now/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+        ); 
+        var bodyJadwal = json.decode(responseJadwal.body);
+
+        print(bodyJadwal);
+
+        var jsonApp=json.encode({
+            "is_booked":false,
+            "idDokter":"${bodyPA["idDokter"]}", 
+            "idRekamMedis":"${bodyPA["id"]}",
+            "idJadwal":"${bodyJadwal["id"]}"
           });
+        
+        var responseAppointment = await http.post(
+          'http://api-dentis.herokuapp.com/appointment/${bodyPA["data"]["idPasien"]}/',
+          headers: {
+            "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
+            "X-CSRFToken":cookies[0].value,
+            "Content-Type":"application/json"
+          },
+          body: jsonApp
+        );
+        var bodyAppointment = json.decode(responseAppointment.body);
+
+        print(bodyAppointment);
+        
+
+
+        if (_image != null){
+          var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
+          var length = await _image.length();
+
+          var uri = Uri.parse('http://api-dentis.herokuapp.com/foto-rontgen/');
+
+          var request = new http.MultipartRequest("POST", uri);
+          request.headers["Cookie"]=cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value;
+          request.headers["X-CSRFToken"]=cookies[0].value;
+          request.fields["idRekamMedis"]='${bodyPA["id"]}';
+          var multipartFile = new http.MultipartFile('foto', stream, length,
+              filename: path.basename(_image.path));
+              //contentType: new MediaType('image', 'png'));
+
+          request.files.add(multipartFile);
+          var response = await request.send();
+          print(response.statusCode);
+          if (response.statusCode!=200 && response.statusCode!=201){
+            Navigator.push(
+              context, 
+              new MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                  new ErrorScreen()
+                )
+            );
+            return;
+          }
         }
       }
-      print(list);
-
-      Map<String, dynamic> bodyO = {
-        "idRekamMedis":'${bodyPA["id"]}',
-        "gigi": list
-      };
-      var bodyOJson = json.encode(bodyO);
-
-      print(bodyOJson);
-      var responseOdon =  await http.post(
-        'http://api-dentis.herokuapp.com/odontogram/',
-        headers: {
-          "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
-          "X-CSRFToken":cookies[0].value,
-          "Content-Type":"application/json"
-        },
-        body: bodyOJson
-      );
-      var bodyOdon = json.decode(responseOdon.body);
-      print("===========");
-      print(bodyOdon);
-      print("===========");
-
       
-      print(widget.data["ohis"]);
-      Map<String, dynamic> bodyOh= {
-        "idRekamMedis":'${bodyPA["id"]}',
-        "kondisi": widget.data["ohis"].values.toList()
-      };
-      var bodyOhJson = json.encode(bodyOh);
-
-      var responseOhis =  await http.post(
-        'http://api-dentis.herokuapp.com/ohis/',
-        headers: {
-          "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
-          "X-CSRFToken":cookies[0].value,
-          "Content-Type":"application/json"
-        },
-        body: bodyOhJson
-      );
-      print(responseOhis.body);
-      
-
-      var bodyOhis = json.decode(responseOhis.body);
-
-      if (_image != null){
-        var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
-        var length = await _image.length();
-
-        var uri = Uri.parse('http://api-dentis.herokuapp.com/foto-rontgen/');
-
-        var request = new http.MultipartRequest("POST", uri);
-        request.headers["Cookie"]=cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value;
-        request.headers["X-CSRFToken"]=cookies[0].value;
-        request.fields["idRekamMedis"]='${bodyPA["id"]}';
-        var multipartFile = new http.MultipartFile('foto', stream, length,
-            filename: path.basename(_image.path));
-            //contentType: new MediaType('image', 'png'));
-
-        request.files.add(multipartFile);
-        var response = await request.send();
-        print(response.statusCode);
-        if (response.statusCode!=200 && response.statusCode!=201){
-          Navigator.push(
-            context, 
-            new MaterialPageRoute(
-                builder: (BuildContext context) =>
-                new ErrorScreen()
-              )
-          );
-          return;
-        }
-      }
       setState(() {
         opacity=0;
       });

@@ -197,7 +197,7 @@ class _NewUserState extends State<NewUser> {
                           setState(() {
                             alert = "";
                           });
-                          data={"pasien":{"name":namaController.text,"jenisKelamin":jenisKelamin, "no_hp":"081229079453"}};
+                          data={"pasien":{"nama":namaController.text,"jenisKelamin":jenisKelamin, "no_hp":"081229079453"},"isAppointment":false};
                           Navigator.push(
                             context, 
                             new MaterialPageRoute(

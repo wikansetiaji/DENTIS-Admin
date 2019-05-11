@@ -24,22 +24,18 @@ class _AdminTambahAppointmentState extends State<AdminTambahAppointment> {
   String datePicked;
   String timePicked;
   String dokterPicked;
-  String layananPicked;
   List<dynamic> listJadwal = [];
   List<dynamic> listDokter = [];
-  List<dynamic> listLayanan = [];
   Set<String> dateSet= new Set<String>();
   Set<String> timeSet= new Set<String>();
   List<DropdownMenuItem<String>> dokterDropdownList = new List<DropdownMenuItem<String>>();
   List<DropdownMenuItem<String>> dateDropdownList = new List<DropdownMenuItem<String>>();
   List<DropdownMenuItem<String>> timeDropdownList = new List<DropdownMenuItem<String>>();
-  List<DropdownMenuItem<String>> layananDropdownList = new List<DropdownMenuItem<String>>();
   double height=0;
   double opacity=0;
   String alertTanggal="";
   String alertJam="";
   String alertDokter="";
-  String alertLayanan="";
 
   error()async{
     await Navigator.of(context).pushReplacement(
@@ -117,31 +113,6 @@ class _AdminTambahAppointmentState extends State<AdminTambahAppointment> {
         ]);
       }
 
-      var responseLayanan =  await http.get(
-        'http://api-dentis.herokuapp.com/jenis-penanganan/',
-        headers: {
-          "Cookie":cookies[1].name+"="+cookies[1].value
-        },
-      );
-      if(responseLayanan.statusCode!=200 && responseLayanan.statusCode!=201){
-        await error();
-        setState(() {
-          height=0;
-        });
-        return;
-      }
-      var bodyLayanan = json.decode(responseLayanan.body);
-      listLayanan=bodyLayanan;
-      layananDropdownList = new List<DropdownMenuItem<String>>();
-      for (var i in listLayanan){
-        layananDropdownList.addAll([
-          DropdownMenuItem(
-            value: i["id"].toString(),
-            child: Text(i["nama"]),
-          )
-        ]);
-      }
-
       setState(() {
         this.height=0;
       });
@@ -156,7 +127,6 @@ class _AdminTambahAppointmentState extends State<AdminTambahAppointment> {
       setState(() {
         alertDokter="";
         alertJam="";
-        alertLayanan="";
         alertTanggal="";
       });
       bool passed = true;
@@ -171,10 +141,6 @@ class _AdminTambahAppointmentState extends State<AdminTambahAppointment> {
       if (dokterPicked==null){
         passed=false;
         alertDokter="Dokter wajib diisi";
-      }
-      if (layananPicked==null){
-        passed=false;
-        alertLayanan="Layanan wajib diisi";
       }
       if (passed){
         setState(() {
@@ -369,32 +335,6 @@ class _AdminTambahAppointmentState extends State<AdminTambahAppointment> {
                         ),
                       ),
                       Text("$alertDokter",style: TextStyle(color: Colors.red),),
-                      Container(height: 15,),
-                      Text("Layanan",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
-                      Container(
-                        padding: EdgeInsets.only(left:10),
-                        alignment: Alignment.centerLeft,
-                        width: 325,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(
-                            color: Colors.grey[600],
-
-                          )
-                        ),
-                        child: new DropdownButton(
-                          hint: Text("Pilih layanan"),
-                          isExpanded: true,
-                          value: layananPicked,
-                          items: layananDropdownList,
-                          onChanged: (String selected){
-                            setState(() {
-                                layananPicked = selected;
-                              });
-                          },
-                        ),
-                      ),
-                      Text("$alertLayanan",style: TextStyle(color: Colors.red),),
                       Container(height: 15,),
                       Container(
                         alignment: Alignment.center,
