@@ -555,7 +555,7 @@ class _DetailGigi4State extends State<DetailGigi4> {
                                               },
                                             ),
                                             InkWell(
-                                              child: Text("9 = Not Recorded"),
+                                              child: Text("9 = Persistance"),
                                               onTap: (){
                                                 setState(() {
                                                   values[selected]=9;
@@ -1208,7 +1208,7 @@ class _DetailGigi4State extends State<DetailGigi4> {
                                             },
                                           ),
                                           InkWell(
-                                            child: Text("9 = Not Recorded"),
+                                            child: Text("9 = Persistance"),
                                             onTap: (){
                                               setState(() {
                                                 values[selected]=9;

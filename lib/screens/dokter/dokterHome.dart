@@ -34,7 +34,7 @@ class _DokterHomeState extends State<DokterHome> {
     setState(() {
       loading=true;
     });
-    list=[];
+    this.list=[];
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     
@@ -186,29 +186,6 @@ class _DokterHomeState extends State<DokterHome> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                InkWell(
-                  onTap: (){
-                    
-                  },
-                  child: Container(
-                    height: 108,
-                    width: 90,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage("assets/appointment.png"))
-                          ),
-                        ),
-                        Container(height: 13,),
-                        Text("Appointment")
-                      ],
-                    ),
-                  ),
-                ),
                 InkWell(
                   onTap: ()async{
                     Navigator.push(

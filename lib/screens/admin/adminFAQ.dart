@@ -197,11 +197,11 @@ class _AdminFAQState extends State<AdminFAQ> {
                         color: Colors.black,
                         onPressed: ()async{
                           await launch(
-                            "tel:081229079453"
+                            "tel:081284640615"
                           );
                         },
                       ),
-                      Text("081229079453")
+                      Text("081284640615")
                     ],
                   )
                 ],

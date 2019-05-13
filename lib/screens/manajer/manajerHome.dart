@@ -175,7 +175,7 @@ class _ManajerHomeState extends State<ManajerHome> {
           trailing: Text("${listStatus[9]}" + "%"),
         ),
         ListTile(
-          title: Text("Not recorded"),
+          title: Text("Persistance"),
           trailing: Text("${listStatus[10]}" + "%"),
         ),
         ListTile(

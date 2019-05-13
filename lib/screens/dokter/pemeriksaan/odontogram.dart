@@ -29,11 +29,11 @@ class _OdontogramState extends State<Odontogram> {
     // TODO: implement initState
     super.initState();
     print(widget.data["odontogram"]);
-    ohisData = widget.data["ohis"]==null?{"11":{"kode":"11","ci":0,"di":0},"16":{"kode":"16","ci":0,"di":0},"21":{"kode":"21","ci":0,"di":0},"31":{"kode":"31","ci":0,"di":0},"36":{"kode":"36","ci":0,"di":0},"46":{"kode":"46","ci":0,"di":0}}:widget.data["ohis"];
+    ohisData = widget.data["ohis"]==null?{"11":{"kode":"11","ci":0,"di":0},"16":{"kode":"16","ci":0,"di":0},"26":{"kode":"26","ci":0,"di":0},"31":{"kode":"31","ci":0,"di":0},"36":{"kode":"36","ci":0,"di":0},"46":{"kode":"46","ci":0,"di":0}}:widget.data["ohis"];
   }
 
   openDetail(String code) async{
-    List<String> ohis=["11","16","21","31","36","46"];
+    List<String> ohis=["11","16","26","31","36","46"];
     if (int.parse(code.substring(1))<4){
       if (ohis.contains(code)){
         Map<String,dynamic> res = await Navigator.push(
@@ -86,7 +86,7 @@ class _OdontogramState extends State<Odontogram> {
 
   resetGigiDisplay(){
     gigi={};
-    List<String> ohis=["11","16","21","31","36","46"];
+    List<String> ohis=["11","16","26","31","36","46"];
     for (var code in widget.data["odontogram"].keys){
       if (int.parse(code.substring(1))<4){
         int sum = 0;
