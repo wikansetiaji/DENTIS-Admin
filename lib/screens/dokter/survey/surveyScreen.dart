@@ -307,7 +307,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           child: Container(
                             alignment: Alignment.center,
                             height: 35,
-                            child: Text("Kadang kadang"),
+                            child: Text("Kadang-kadang"),
                           ),
                           onTap: (){
                             setState(() {

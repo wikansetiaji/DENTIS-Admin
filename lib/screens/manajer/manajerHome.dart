@@ -216,6 +216,7 @@ class _ManajerHomeState extends State<ManajerHome> {
       ];
     });
 
+    this.rekamMedis=[];
     var responseRekamMedis =  await http.get(
         'http://api-dentis.herokuapp.com/rekam-medis/',
         headers: {

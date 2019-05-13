@@ -145,7 +145,7 @@ class _DokterNewsState extends State<DokterNews> {
             children: <Widget>[
               Container(height: 40,),
               Text(
-                "Dental\nNews",
+                "Health\nNews",
                 style: TextStyle(
                   fontWeight:FontWeight.bold,
                   fontSize: 40

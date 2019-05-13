@@ -159,6 +159,7 @@ class _PemeriksaanAwalState extends State<PemeriksaanAwal> {
                     height: 60,
                     width: 325,
                     child: new TextField(
+                      keyboardType: TextInputType.numberWithOptions(),
                       controller: beratController,
                       decoration: new InputDecoration(
                         border: new OutlineInputBorder(
@@ -180,6 +181,7 @@ class _PemeriksaanAwalState extends State<PemeriksaanAwal> {
                     height: 60,
                     width: 325,
                     child: new TextField(
+                      keyboardType: TextInputType.numberWithOptions(),
                       controller: tinggiController,
                       decoration: new InputDecoration(
                         border: new OutlineInputBorder(
@@ -216,12 +218,6 @@ class _PemeriksaanAwalState extends State<PemeriksaanAwal> {
                         });
                         post=false;
                       }
-                      if (double.tryParse(tekananDarahController.text) == null &&tekananDarahController.text!=""){
-                        setState(() {
-                          alertTekananDarah="Format tekanan darah salah";
-                          post=false;
-                        });
-                      }
                       if (double.tryParse(beratController.text) == null &&beratController.text!=""){
                         setState(() {
                           alertBerat="Format berat salah";
@@ -240,8 +236,8 @@ class _PemeriksaanAwalState extends State<PemeriksaanAwal> {
                           "rekamMedis":{
                             "anamnesa":anamnesaController.text,
                             "alergi":alergiController.text,
-                            "riwayatPenyakit":riwayatController.text,
-                            "tekananDarah":tekananDarahController.text,
+                            "riwayat_penyakit":riwayatController.text,
+                            "tekanan_darah":tekananDarahController.text,
                             "berat":beratController.text,
                             "tinggi":tinggiController.text
                           }

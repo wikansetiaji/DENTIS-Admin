@@ -32,9 +32,9 @@ class _DokterHomeState extends State<DokterHome> {
 
   load()async{
     setState(() {
+      this.list=[];
       loading=true;
     });
-    this.list=[];
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     

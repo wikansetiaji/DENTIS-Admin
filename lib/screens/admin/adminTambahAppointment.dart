@@ -202,22 +202,23 @@ class _AdminTambahAppointmentState extends State<AdminTambahAppointment> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children:<Widget>[
-        Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              color: Colors.black,
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
-            ),
-            centerTitle: true,
-            title: Text("Appointment",style: TextStyle(color:Colors.black54),),
-          ),
-          body: Container(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          color: Colors.black,
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+        ),
+        centerTitle: true,
+        title: Text("Appointment",style: TextStyle(color:Colors.black54),),
+      ),
+      body: 
+        Stack(
+        children:<Widget>[
+          Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
@@ -352,41 +353,41 @@ class _AdminTambahAppointmentState extends State<AdminTambahAppointment> {
                 ),
               ]
             )
-          )
-        ),
-        Container(
-          height: this.height,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.white,
-        ),
-        Container(
-          height: this.height,
-          width: MediaQuery.of(context).size.width,
-          child: Center(
-            child: CircularProgressIndicator(),
           ),
-        ),
-        new Opacity(
-          opacity: 0.5,
-          child: new Container(
-            color: Colors.black,
+          Container(
+            height: this.height,
             width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+          ),
+          Container(
+            height: this.height,
+            width: MediaQuery.of(context).size.width,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          new Opacity(
+            opacity: 0.5,
+            child: new Container(
+              color: Colors.black,
+              width: MediaQuery.of(context).size.width,
+              height: this.opacity,
+            ),
+          ),
+          new Container(
+            child: new Center(
+              child:new Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                ],
+              )
+            ),
             height: this.opacity,
-          ),
-        ),
-        new Container(
-          child: new Center(
-            child:new Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircularProgressIndicator(),
-              ],
-            )
-          ),
-          height: this.opacity,
-        )
-      ],
+          )
+        ],
+      )
     );
   }
 }

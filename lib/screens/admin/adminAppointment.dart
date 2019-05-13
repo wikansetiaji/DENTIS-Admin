@@ -41,7 +41,9 @@ class _AdminAppointmentState extends State<AdminAppointment> {
       setState(() {
         this.height=MediaQuery.of(context).size.height;
       });
-      list=[];
+      setState(() {
+        list=[];
+      });
       Directory tempDir = await getTemporaryDirectory();
       String tempPath = tempDir.path;
       
@@ -280,70 +282,71 @@ class _AdminAppointmentState extends State<AdminAppointment> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              color: Colors.black,
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
-            ),
-            centerTitle: true,
-            title: Text("Appointment",style: TextStyle(color:Colors.black54),),
-          ),
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/wallpapers/wallpaper2.png"),
-                fit: BoxFit.cover
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          color: Colors.black,
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+        ),
+        centerTitle: true,
+        title: Text("Appointment",style: TextStyle(color:Colors.black54),),
+      ),
+      body: 
+        Stack(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/wallpapers/wallpaper2.png"),
+                  fit: BoxFit.cover
+                )
+              ),
+              child: ListView(
+                children: <Widget>[
+                  Container(height: 48,),
+                  Column(
+                    children: <Widget>[
+                      ButtonGradient(
+                        height: 50,
+                        width: 150,
+                        onTap: (){
+                          Navigator.of(context).push(
+                            new MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                new AdminTambahAppointment(idPasien: widget.idPasien,)
+                              )
+                          );
+                        },
+                        text: "Buat Appointment",
+                      )
+                    ]
+                  ),
+                  Column(
+                    children:this.list
+                  )
+                ]
               )
             ),
-            child: ListView(
-              children: <Widget>[
-                Container(height: 48,),
-                Column(
-                  children: <Widget>[
-                    ButtonGradient(
-                      height: 50,
-                      width: 150,
-                      onTap: (){
-                        Navigator.of(context).push(
-                          new MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                              new AdminTambahAppointment(idPasien: widget.idPasien,)
-                            )
-                        );
-                      },
-                      text: "Buat Appointment",
-                    )
-                  ]
-                ),
-                Column(
-                  children:this.list
-                )
-              ]
-            )
-          )
-        ),
-        Container(
-          height: this.height,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.white,
-        ),
-        Container(
-          height: this.height,
-          width: MediaQuery.of(context).size.width,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      ],
+            Container(
+              height: this.height,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white,
+            ),
+            Container(
+              height: this.height,
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ],
+        )
     );
   }
 }
