@@ -93,7 +93,7 @@ class _OdontogramState extends State<Odontogram> {
         for(var i in widget.data["odontogram"][code].values){
           sum+=i;
         }
-        if (sum==-4){
+        if (sum==0){
           if (ohis.contains(code)){
             gigi.addAll({code:Gigi4(ohis:true, code:code, onTap: (){openDetail(code);}, selected: false,)});
           }
@@ -111,11 +111,11 @@ class _OdontogramState extends State<Odontogram> {
         }
       }
       else{
-        int sum = 0;
+        int sum = 0; 
         for(var i in widget.data["odontogram"][code].values){
           sum+=i;
         }
-        if (sum==-5){
+        if (sum==0){
           if (ohis.contains(code)){
             gigi.addAll({code:Gigi5(ohis:true,code:code, onTap:(){openDetail(code);}, selected: false,)});
           }

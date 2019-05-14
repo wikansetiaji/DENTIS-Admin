@@ -7,10 +7,10 @@ class Util{
       if (i<5){
         while (j<9){
           if (j<4){
-            output.addAll({"$i$j":{"d":-1,"l":-1,"m":-1,"v":-1}});
+            output.addAll({"$i$j":{"d":0,"l":0,"m":0,"v":0}});
           }
           else{
-            output.addAll({"$i$j":{"d":-1,"l":-1,"o":-1,"m":-1,"v":-1}});
+            output.addAll({"$i$j":{"d":0,"l":0,"o":0,"m":0,"v":0}});
           }
           j++;
         }
@@ -19,10 +19,10 @@ class Util{
       else{
         while (j<6){
           if (j<4){
-            output.addAll({"$i$j":{"d":-1,"l":-1,"m":-1,"v":-1}});
+            output.addAll({"$i$j":{"d":0,"l":0,"m":0,"v":0}});
           }
           else{
-            output.addAll({"$i$j":{"d":-1,"l":-1,"o":-1,"m":-1,"v":-1}});
+            output.addAll({"$i$j":{"d":0,"l":0,"o":0,"m":0,"v":0}});
           }
           j++;
         }
