@@ -136,51 +136,51 @@ class _ManajerHomeState extends State<ManajerHome> {
         Container(height: 10,),
         ListTile(
           title: Text("Normal"),
-          trailing: Text("${listStatus[0]}" + "%"),
+          trailing: Text("${listStatus[0]}" + " orang"),
         ),
         ListTile(
           title: Text("Sound"),
-          trailing: Text("${listStatus[1]}" + "%"),
+          trailing: Text("${listStatus[1]}" + " orang"),
         ),
         ListTile(
           title: Text("Caries"),
-          trailing: Text("${listStatus[2]}" + "%"),
+          trailing: Text("${listStatus[2]}" + " orang"),
         ),
         ListTile(
           title: Text("Filled with Caries"),
-          trailing: Text("${listStatus[3]}" + "%"),
+          trailing: Text("${listStatus[3]}" + " orang"),
         ),
         ListTile(
           title: Text("Filled no Caries"),
-          trailing: Text("${listStatus[4]}" + "%"),
+          trailing: Text("${listStatus[4]}" + " orang"),
         ),
         ListTile(
           title: Text("Missing due to Caries"),
-          trailing: Text("${listStatus[5]}" + "%"),
+          trailing: Text("${listStatus[5]}" + " orang"),
         ),
         ListTile(
           title: Text("Missing for Another Reason"),
-          trailing: Text("${listStatus[6]}" + "%"),
+          trailing: Text("${listStatus[6]}" + " orang"),
         ),
         ListTile(
           title: Text("Fissure Sealant"),
-          trailing: Text("${listStatus[7]}" + "%"),
+          trailing: Text("${listStatus[7]}" + " orang"),
         ),
         ListTile(
           title: Text("Fix dental prosthesis / crown, abutment, veneer "),
-          trailing: Text("${listStatus[8]}" + "%"),
+          trailing: Text("${listStatus[8]}" + " orang"),
         ),
         ListTile(
           title: Text("Unerupted"),
-          trailing: Text("${listStatus[9]}" + "%"),
+          trailing: Text("${listStatus[9]}" + " orang"),
         ),
         ListTile(
           title: Text("Persistance"),
-          trailing: Text("${listStatus[10]}" + "%"),
+          trailing: Text("${listStatus[10]}" + " orang"),
         ),
         ListTile(
           title: Text("Whitespot"),
-          trailing: Text("${listStatus[11]}" + "%"),
+          trailing: Text("${listStatus[11]}" + " orang"),
         ),
       ];
 
@@ -347,6 +347,12 @@ class _ManajerHomeState extends State<ManajerHome> {
     });
   }
 
+  csv()async{
+    await launch(
+        "http://api-dentis.herokuapp.com/csv"
+      );
+  }
+
   pdfRekamMedis(String id)async{
     setState(() {
       opacity=MediaQuery.of(context).size.height;
@@ -444,17 +450,25 @@ class _ManajerHomeState extends State<ManajerHome> {
                     style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
                   ),
                   Container(height: 15,),
-                  Column(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:<Widget>[
                         ButtonGradient(
-                        height: 50,
-                        width: 250,
-                        text: "Download Laporan Statistika",
-                        onTap: (){
-                          pdfManajer();
-                        },
-                      )
+                          height: 50,
+                          width: 150,
+                          text: "Download Statistik",
+                          onTap: (){
+                            pdfManajer();
+                          },
+                        ),
+                        ButtonGradient(
+                          height: 50,
+                          width: 150,
+                          text: "Download CSV",
+                          onTap: (){
+                            csv();
+                          },
+                        )
                     ]
                   ),
                   Container(height: 15,),
