@@ -49,9 +49,9 @@ class _AdminEditInstansiState extends State<AdminEditInstansi> {
       String tempPath = tempDir.path;
       
       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/admin-login/")));
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/admin-login/")));
       var response =  await http.get(
-        'http://api-dentis.herokuapp.com/instansi/',
+        'http://dent-is.herokuapp.com/instansi/',
         headers: {
           "Cookie":cookies[1].name+"="+cookies[1].value
         },
@@ -146,10 +146,10 @@ class _AdminEditInstansiState extends State<AdminEditInstansi> {
         String tempPath = tempDir.path;
         
         PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-        List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/admin-login/")));
+        List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/admin-login/")));
         print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
         var response =  await http.patch(
-          'http://api-dentis.herokuapp.com/instansi/$id/',
+          'http://dent-is.herokuapp.com/instansi/$id/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value

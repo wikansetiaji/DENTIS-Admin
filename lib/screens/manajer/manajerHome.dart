@@ -46,9 +46,9 @@ class _ManajerHomeState extends State<ManajerHome> {
     String tempPath = tempDir.path;
     
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/")));
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/manajer-login/")));
     var responseStatus =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/kondisi/',
+      'http://dent-is.herokuapp.com/statistics/kondisi/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -57,7 +57,7 @@ class _ManajerHomeState extends State<ManajerHome> {
     var listStatus = json.decode(bodyStatus["result"]);
     print(listStatus[0]);
     var responseOhis =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/ohis/',
+      'http://dent-is.herokuapp.com/statistics/ohis/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -65,7 +65,7 @@ class _ManajerHomeState extends State<ManajerHome> {
     var bodyOhis = json.decode(responseOhis.body);
     var listOhis = json.decode(bodyOhis["result"]);
     var responsePengunjung =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/pengunjung/',
+      'http://dent-is.herokuapp.com/statistics/pengunjung/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -82,7 +82,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                 width: 300,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("http://api-dentis.herokuapp.com${bodyPengunjung["image"]}")
+                    image: NetworkImage("http://dent-is.herokuapp.com${bodyPengunjung["image"]}")
                   )
                 ),
               )
@@ -128,7 +128,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                 width: 300,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatus["image"]}")
+                    image: NetworkImage("http://dent-is.herokuapp.com${bodyStatus["image"]}")
                   )
                 ),
               )
@@ -191,7 +191,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                 width: 300,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhis["image"]}")
+                    image: NetworkImage("http://dent-is.herokuapp.com${bodyOhis["image"]}")
                   )
                 ),
               )
@@ -216,7 +216,7 @@ class _ManajerHomeState extends State<ManajerHome> {
 
     this.rekamMedis=[];
     var responseRekamMedis =  await http.get(
-        'http://api-dentis.herokuapp.com/rekam-medis/',
+        'http://dent-is.herokuapp.com/rekam-medis/',
         headers: {
           "Cookie":cookies[1].name+"="+cookies[1].value
         },
@@ -262,7 +262,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                         color: Colors.grey,
                         image: DecorationImage(
                           image: NetworkImage(
-                            a["fotorontgen_set"].length!=0?"http://api-dentis.herokuapp.com${a["fotorontgen_set"][0]["foto"]}":""
+                            a["fotorontgen_set"].length!=0?"http://dent-is.herokuapp.com${a["fotorontgen_set"][0]["foto"]}":""
                           ),
                           fit: BoxFit.fitWidth
                         )
@@ -305,7 +305,7 @@ class _ManajerHomeState extends State<ManajerHome> {
       }
     
     var responseStatusOrang =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/kondisiOrang/',
+      'http://dent-is.herokuapp.com/statistics/kondisiOrang/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -314,7 +314,7 @@ class _ManajerHomeState extends State<ManajerHome> {
     var listStatusOrang = json.decode(bodyStatusOrang["result"]);
     
     var responseOhisOrang =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/ohisOrang/',
+      'http://dent-is.herokuapp.com/statistics/ohisOrang/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -331,7 +331,7 @@ class _ManajerHomeState extends State<ManajerHome> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatusOrang["image"]}")
+                  image: NetworkImage("http://dent-is.herokuapp.com${bodyStatusOrang["image"]}")
                 )
               ),
             )
@@ -394,7 +394,7 @@ class _ManajerHomeState extends State<ManajerHome> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhisOrang["image"]}")
+                  image: NetworkImage("http://dent-is.herokuapp.com${bodyOhisOrang["image"]}")
                 )
               ),
             )
@@ -434,9 +434,9 @@ class _ManajerHomeState extends State<ManajerHome> {
     String tempPath = tempDir.path;
     
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/")));
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/manajer-login/")));
     var responseStatus =  await http.get(
-      'http://api-dentis.herokuapp.com/report/manajer',
+      'http://dent-is.herokuapp.com/report/manajer',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -445,7 +445,7 @@ class _ManajerHomeState extends State<ManajerHome> {
     if (responseStatus.statusCode==200){
       print("oke");
       await launch(
-        "http://api-dentis.herokuapp.com/media/manajer_report.pdf"
+        "http://dent-is.herokuapp.com/media/manajer_report.pdf"
       );
     }
     else{
@@ -458,7 +458,7 @@ class _ManajerHomeState extends State<ManajerHome> {
 
   csv()async{
     await launch(
-        "http://api-dentis.herokuapp.com/csv"
+        "http://dent-is.herokuapp.com/csv"
       );
   }
 
@@ -471,9 +471,9 @@ class _ManajerHomeState extends State<ManajerHome> {
     String tempPath = tempDir.path;
     
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/")));
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/manajer-login/")));
     var responseStatus =  await http.get(
-      'http://api-dentis.herokuapp.com/report/rekam-medis/$id/',
+      'http://dent-is.herokuapp.com/report/rekam-medis/$id/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -482,7 +482,7 @@ class _ManajerHomeState extends State<ManajerHome> {
     if (responseStatus.statusCode==200){
       print("oke");
       await launch(
-        "http://api-dentis.herokuapp.com/media/rekam_medis/$id.pdf"
+        "http://dent-is.herokuapp.com/media/rekam_medis/$id.pdf"
       );
     }
     else{
@@ -523,7 +523,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                   String tempPath = tempDir.path;
                   
                   PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-                  cj.delete(Uri.parse("http://api-dentis.herokuapp.com/manajer-login/"));
+                  cj.delete(Uri.parse("http://dent-is.herokuapp.com/manajer-login/"));
                   Navigator.pushReplacement(context, new MaterialPageRoute(
                     builder: (BuildContext context) =>
                     new InitialScreen()

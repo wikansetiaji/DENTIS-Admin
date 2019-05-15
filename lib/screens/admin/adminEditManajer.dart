@@ -163,7 +163,7 @@ class _AdminEditManajerState extends State<AdminEditManajer> {
         List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http:// -dentis.herokuapp.com/admin-login/")));
         print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
         var response =  await http.patch(
-          'http://api-dentis.herokuapp.com/manajer/${widget.id}/',
+          'http://dent-is.herokuapp.com/manajer/${widget.id}/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value

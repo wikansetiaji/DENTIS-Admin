@@ -35,7 +35,7 @@ class _UploadFotoState extends State<UploadFoto> {
       String tempPath = tempDir.path;
       
       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/dokter-login/")));
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/dokter-login/")));
       
       print(widget.data["pasien"]);
 
@@ -55,7 +55,7 @@ class _UploadFotoState extends State<UploadFoto> {
         var bodyJson = json.encode(bodyMap);
 
         var responsePA =  await http.post(
-          'http://api-dentis.herokuapp.com/pemeriksaanAwal/',
+          'http://dent-is.herokuapp.com/pemeriksaanAwal/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -102,7 +102,7 @@ class _UploadFotoState extends State<UploadFoto> {
 
         print(bodyOJson);
         var responseOdon =  await http.post(
-          'http://api-dentis.herokuapp.com/odontogram/',
+          'http://dent-is.herokuapp.com/odontogram/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -124,7 +124,7 @@ class _UploadFotoState extends State<UploadFoto> {
         var bodyOhJson = json.encode(bodyOh);
 
         var responseOhis =  await http.post(
-          'http://api-dentis.herokuapp.com/ohis/',
+          'http://dent-is.herokuapp.com/ohis/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -143,7 +143,7 @@ class _UploadFotoState extends State<UploadFoto> {
           var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
           var length = await _image.length();
 
-          var uri = Uri.parse('http://api-dentis.herokuapp.com/foto-rontgen/');
+          var uri = Uri.parse('http://dent-is.herokuapp.com/foto-rontgen/');
 
           var request = new http.MultipartRequest("POST", uri);
           request.headers["Cookie"]=cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value;
@@ -170,7 +170,7 @@ class _UploadFotoState extends State<UploadFoto> {
       }
       else{
         var responsePasien =  await http.post(
-          'http://api-dentis.herokuapp.com/pasien/',
+          'http://dent-is.herokuapp.com/pasien/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value
@@ -197,7 +197,7 @@ class _UploadFotoState extends State<UploadFoto> {
 
         var bodyJson = json.encode(bodyMap);
         var responsePA =  await http.post(
-          'http://api-dentis.herokuapp.com/pemeriksaanAwal/',
+          'http://dent-is.herokuapp.com/pemeriksaanAwal/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -244,7 +244,7 @@ class _UploadFotoState extends State<UploadFoto> {
 
         print(bodyOJson);
         var responseOdon =  await http.post(
-          'http://api-dentis.herokuapp.com/odontogram/',
+          'http://dent-is.herokuapp.com/odontogram/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -266,7 +266,7 @@ class _UploadFotoState extends State<UploadFoto> {
         var bodyOhJson = json.encode(bodyOh);
 
         var responseOhis =  await http.post(
-          'http://api-dentis.herokuapp.com/ohis/',
+          'http://dent-is.herokuapp.com/ohis/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -282,7 +282,7 @@ class _UploadFotoState extends State<UploadFoto> {
         print(bodyOhis);
 
         var responseJadwal =  await http.get(
-          'http://api-dentis.herokuapp.com/jadwal-praktek-now/',
+          'http://dent-is.herokuapp.com/jadwal-praktek-now/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -301,7 +301,7 @@ class _UploadFotoState extends State<UploadFoto> {
           });
         
         var responseAppointment = await http.post(
-          'http://api-dentis.herokuapp.com/appointment/${bodyPA["data"]["idPasien"]}/',
+          'http://dent-is.herokuapp.com/appointment/${bodyPA["data"]["idPasien"]}/',
           headers: {
             "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
             "X-CSRFToken":cookies[0].value,
@@ -319,7 +319,7 @@ class _UploadFotoState extends State<UploadFoto> {
           var stream = new http.ByteStream(DelegatingStream.typed(_image.openRead()));
           var length = await _image.length();
 
-          var uri = Uri.parse('http://api-dentis.herokuapp.com/foto-rontgen/');
+          var uri = Uri.parse('http://dent-is.herokuapp.com/foto-rontgen/');
 
           var request = new http.MultipartRequest("POST", uri);
           request.headers["Cookie"]=cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value;

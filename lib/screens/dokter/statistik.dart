@@ -39,9 +39,9 @@ class _StatistikState extends State<Statistik> {
     String tempPath = tempDir.path;
     
     PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/dokter-login/")));
+    List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/dokter-login/")));
     var responseStatus =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/kondisi/',
+      'http://dent-is.herokuapp.com/statistics/kondisi/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -50,7 +50,7 @@ class _StatistikState extends State<Statistik> {
     var listStatus = json.decode(bodyStatus["result"]);
     
     var responseOhis =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/ohis/',
+      'http://dent-is.herokuapp.com/statistics/ohis/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -59,7 +59,7 @@ class _StatistikState extends State<Statistik> {
     var listOhis = json.decode(bodyOhis["result"]);
 
     var responseStatusOrang =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/kondisiOrang/',
+      'http://dent-is.herokuapp.com/statistics/kondisiOrang/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -68,7 +68,7 @@ class _StatistikState extends State<Statistik> {
     var listStatusOrang = json.decode(bodyStatusOrang["result"]);
     
     var responseOhisOrang =  await http.get(
-      'http://api-dentis.herokuapp.com/statistics/ohisOrang/',
+      'http://dent-is.herokuapp.com/statistics/ohisOrang/',
       headers: {
         "Cookie":cookies[1].name+"="+cookies[1].value
       },
@@ -85,7 +85,7 @@ class _StatistikState extends State<Statistik> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatus["image"]}")
+                  image: NetworkImage("http://dent-is.herokuapp.com${bodyStatus["image"]}")
                 )
               ),
             )
@@ -148,7 +148,7 @@ class _StatistikState extends State<Statistik> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhis["image"]}")
+                  image: NetworkImage("http://dent-is.herokuapp.com${bodyOhis["image"]}")
                 )
               ),
             )
@@ -178,7 +178,7 @@ class _StatistikState extends State<Statistik> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatusOrang["image"]}")
+                  image: NetworkImage("http://dent-is.herokuapp.com${bodyStatusOrang["image"]}")
                 )
               ),
             )
@@ -241,7 +241,7 @@ class _StatistikState extends State<Statistik> {
               width: 300,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhisOrang["image"]}")
+                  image: NetworkImage("http://dent-is.herokuapp.com${bodyOhisOrang["image"]}")
                 )
               ),
             )

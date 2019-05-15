@@ -54,10 +54,10 @@ class _AdminAddFAQState extends State<AdminAddFAQ> {
       String tempPath = tempDir.path;
       
       PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://api-dentis.herokuapp.com/admin-login/")));
+      List<Cookie> cookies = (cj.loadForRequest(Uri.parse("http://dent-is.herokuapp.com/admin-login/")));
       print(cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value);
       var response =  await http.post(
-        'http://api-dentis.herokuapp.com/faqs/',
+        'http://dent-is.herokuapp.com/faqs/',
         headers: {
           "Cookie":cookies[1].name+"="+cookies[1].value+";"+cookies[0].name+"="+cookies[0].value,
           "X-CSRFToken":cookies[0].value

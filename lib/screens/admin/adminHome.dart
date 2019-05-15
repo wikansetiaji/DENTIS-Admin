@@ -25,7 +25,7 @@ class AdminHome extends StatelessWidget {
               String tempPath = tempDir.path;
               
               PersistCookieJar cj=new PersistCookieJar(dir:tempPath);
-              cj.delete(Uri.parse("http://api-dentis.herokuapp.com/admin-login/"));
+              cj.delete(Uri.parse("http://dent-is.herokuapp.com/admin-login/"));
               Navigator.pushReplacement(context, new MaterialPageRoute(
                 builder: (BuildContext context) =>
                 new InitialScreen()
