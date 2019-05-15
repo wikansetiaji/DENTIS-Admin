@@ -25,6 +25,8 @@ class _ManajerHomeState extends State<ManajerHome> {
   List<Widget> pengunjung=[];
   List<Widget> body;
   List<Widget> rekamMedis=[];
+  List<Widget> statusOrang=[];
+  List<Widget> ohisOrang=[];
 
   error()async{
     await Navigator.of(context).pushReplacement(
@@ -135,52 +137,48 @@ class _ManajerHomeState extends State<ManajerHome> {
         ),
         Container(height: 10,),
         ListTile(
-          title: Text("Normal"),
-          trailing: Text("${listStatus[0]}" + " orang"),
-        ),
-        ListTile(
           title: Text("Sound"),
-          trailing: Text("${listStatus[1]}" + " orang"),
+          trailing: Text("${listStatus[0]}" + " %"),
         ),
         ListTile(
           title: Text("Caries"),
-          trailing: Text("${listStatus[2]}" + " orang"),
+          trailing: Text("${listStatus[1]}" + " %"),
         ),
         ListTile(
           title: Text("Filled with Caries"),
-          trailing: Text("${listStatus[3]}" + " orang"),
+          trailing: Text("${listStatus[2]}" + " %"),
         ),
         ListTile(
           title: Text("Filled no Caries"),
-          trailing: Text("${listStatus[4]}" + " orang"),
+          trailing: Text("${listStatus[3]}" + " %"),
         ),
         ListTile(
           title: Text("Missing due to Caries"),
-          trailing: Text("${listStatus[5]}" + " orang"),
+          trailing: Text("${listStatus[4]}" + " %"),
         ),
         ListTile(
           title: Text("Missing for Another Reason"),
-          trailing: Text("${listStatus[6]}" + " orang"),
+          trailing: Text("${listStatus[5]}" + " %"),
         ),
         ListTile(
           title: Text("Fissure Sealant"),
-          trailing: Text("${listStatus[7]}" + " orang"),
+          trailing: Text("${listStatus[6]}" + " %"),
         ),
         ListTile(
           title: Text("Fix dental prosthesis / crown, abutment, veneer "),
-          trailing: Text("${listStatus[8]}" + " orang"),
+          trailing: Text("${listStatus[7]}" + " %"),
         ),
         ListTile(
           title: Text("Unerupted"),
-          trailing: Text("${listStatus[9]}" + " orang"),
+          trailing: Text("${listStatus[8]}" + " %"),
         ),
         ListTile(
           title: Text("Persistance"),
-          trailing: Text("${listStatus[10]}" + " orang"),
+          trailing: Text("${listStatus[9]}" + " %"),
         ),
         ListTile(
           title: Text("Whitespot"),
-          trailing: Text("${listStatus[11]}" + " orang"),
+          trailing: Text("${listStatus[10]}" + " %"),
         ),
       ];
 
@@ -305,7 +303,118 @@ class _ManajerHomeState extends State<ManajerHome> {
           ]
         );
       }
+    
+    var responseStatusOrang =  await http.get(
+      'http://api-dentis.herokuapp.com/statistics/kondisiOrang/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    var bodyStatusOrang = json.decode(responseStatusOrang.body);
+    var listStatusOrang = json.decode(bodyStatusOrang["result"]);
+    
+    var responseOhisOrang =  await http.get(
+      'http://api-dentis.herokuapp.com/statistics/ohisOrang/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    var bodyOhisOrang = json.decode(responseOhisOrang.body);
+    var listOhisOrang = json.decode(bodyOhisOrang["result"]);
 
+    statusOrang = [
+      Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 300,
+              width: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatusOrang["image"]}")
+                )
+              ),
+            )
+          ],
+        )
+      ),
+      Container(height: 10,),
+      ListTile(
+        title: Text("Sound"),
+        trailing: Text("${listStatusOrang[0]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Caries"),
+        trailing: Text("${listStatusOrang[1]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Filled with Caries"),
+        trailing: Text("${listStatusOrang[2]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Filled no Caries"),
+        trailing: Text("${listStatusOrang[3]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Missing due to Caries"),
+        trailing: Text("${listStatusOrang[4]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Missing for Another Reason"),
+        trailing: Text("${listStatusOrang[5]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Fissure Sealant"),
+        trailing: Text("${listStatusOrang[6]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Fix dental prosthesis / crown, abutment, veneer "),
+        trailing: Text("${listStatusOrang[7]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Unerupted"),
+        trailing: Text("${listStatusOrang[8]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Persistance"),
+        trailing: Text("${listStatusOrang[9]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Whitespot"),
+        trailing: Text("${listStatusOrang[10]}" + " orang"),
+      ),
+    ];
+
+    ohisOrang=[
+      Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 300,
+              width: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhisOrang["image"]}")
+                )
+              ),
+            )
+          ],
+        )
+      ),
+      Container(height: 10,),
+      ListTile(
+        title: Text("Baik"),
+        trailing: Text("${listOhisOrang[0]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Sedang"),
+        trailing: Text("${listOhisOrang[1]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Buruk"),
+        trailing: Text("${listOhisOrang[2]}" + " orang"),
+      ),
+    ];
     setState(() {
       body=status;
       this.height=0.0;
@@ -481,6 +590,14 @@ class _ManajerHomeState extends State<ManajerHome> {
                         value: selected,
                         items: <DropdownMenuItem<String>>[
                           DropdownMenuItem(
+                            value: "statusOrang",
+                            child: Text("Status Prevalensi",style: TextStyle(color: Colors.grey[700]),),
+                          ),
+                          DropdownMenuItem(
+                            value: "ohisOrang",
+                            child: Text("Ohis Prevalensi",style: TextStyle(color: Colors.grey[700]),),
+                          ),
+                          DropdownMenuItem(
                             value: "status",
                             child: Text("Status",style: TextStyle(color: Colors.grey[700]),),
                           ),
@@ -495,7 +612,7 @@ class _ManajerHomeState extends State<ManajerHome> {
                           DropdownMenuItem(
                             value: "rekamMedis",
                             child: Text("Rekam Medis",style: TextStyle(color: Colors.grey[700]),),
-                          )
+                          ),
                         ],
                         onChanged: (String a){
                           setState(() {
@@ -509,8 +626,14 @@ class _ManajerHomeState extends State<ManajerHome> {
                             else if (a=="status"){
                               body=status;
                             }
-                            else{
+                            else if (a=="rekamMedis"){
                               body = rekamMedis;
+                            }
+                            else if(a=="ohisOrang"){
+                              body=ohisOrang;
+                            }
+                            else if (a=="statusOrang"){
+                              body=statusOrang;
                             }
                           });
                         },

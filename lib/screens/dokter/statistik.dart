@@ -15,8 +15,11 @@ class Statistik extends StatefulWidget {
 class _StatistikState extends State<Statistik> {
   String selected ="status";
   double height = 0;
+  List<Widget> body=[];
   List<Widget> status=[];
   List<Widget> ohis=[];
+  List<Widget> statusOrang=[];
+  List<Widget> ohisOrang=[];
 
   error()async{
     await Navigator.of(context).pushReplacement(
@@ -54,6 +57,24 @@ class _StatistikState extends State<Statistik> {
     );
     var bodyOhis = json.decode(responseOhis.body);
     var listOhis = json.decode(bodyOhis["result"]);
+
+    var responseStatusOrang =  await http.get(
+      'http://api-dentis.herokuapp.com/statistics/kondisiOrang/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    var bodyStatusOrang = json.decode(responseStatusOrang.body);
+    var listStatusOrang = json.decode(bodyStatusOrang["result"]);
+    
+    var responseOhisOrang =  await http.get(
+      'http://api-dentis.herokuapp.com/statistics/ohisOrang/',
+      headers: {
+        "Cookie":cookies[1].name+"="+cookies[1].value
+      },
+    );
+    var bodyOhisOrang = json.decode(responseOhisOrang.body);
+    var listOhisOrang = json.decode(bodyOhisOrang["result"]);
     
     status = [
       Center(
@@ -73,52 +94,48 @@ class _StatistikState extends State<Statistik> {
       ),
       Container(height: 10,),
       ListTile(
-        title: Text("Normal"),
+        title: Text("Sound"),
         trailing: Text("${listStatus[0]}" + "%"),
       ),
       ListTile(
-        title: Text("Sound"),
+        title: Text("Caries"),
         trailing: Text("${listStatus[1]}" + "%"),
       ),
       ListTile(
-        title: Text("Caries"),
+        title: Text("Filled with Caries"),
         trailing: Text("${listStatus[2]}" + "%"),
       ),
       ListTile(
-        title: Text("Filled with Caries"),
+        title: Text("Filled no Caries"),
         trailing: Text("${listStatus[3]}" + "%"),
       ),
       ListTile(
-        title: Text("Filled no Caries"),
+        title: Text("Missing due to Caries"),
         trailing: Text("${listStatus[4]}" + "%"),
       ),
       ListTile(
-        title: Text("Missing due to Caries"),
+        title: Text("Missing for Another Reason"),
         trailing: Text("${listStatus[5]}" + "%"),
       ),
       ListTile(
-        title: Text("Missing for Another Reason"),
+        title: Text("Fissure Sealant"),
         trailing: Text("${listStatus[6]}" + "%"),
       ),
       ListTile(
-        title: Text("Fissure Sealant"),
+        title: Text("Fix dental prosthesis / crown, abutment, veneer "),
         trailing: Text("${listStatus[7]}" + "%"),
       ),
       ListTile(
-        title: Text("Fix dental prosthesis / crown, abutment, veneer "),
+        title: Text("Unerupted"),
         trailing: Text("${listStatus[8]}" + "%"),
       ),
       ListTile(
-        title: Text("Unerupted"),
+        title: Text("Persistance"),
         trailing: Text("${listStatus[9]}" + "%"),
       ),
       ListTile(
-        title: Text("Persistance"),
-        trailing: Text("${listStatus[10]}" + "%"),
-      ),
-      ListTile(
         title: Text("Whitespot"),
-        trailing: Text("${listStatus[11]}" + "%"),
+        trailing: Text("${listStatus[10]}" + "%"),
       ),
     ];
 
@@ -152,11 +169,106 @@ class _StatistikState extends State<Statistik> {
         trailing: Text("${listOhis[2]}" + "%"),
       ),
     ];
+    statusOrang = [
+      Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 300,
+              width: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyStatusOrang["image"]}")
+                )
+              ),
+            )
+          ],
+        )
+      ),
+      Container(height: 10,),
+      ListTile(
+        title: Text("Sound"),
+        trailing: Text("${listStatusOrang[0]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Caries"),
+        trailing: Text("${listStatusOrang[1]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Filled with Caries"),
+        trailing: Text("${listStatusOrang[2]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Filled no Caries"),
+        trailing: Text("${listStatusOrang[3]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Missing due to Caries"),
+        trailing: Text("${listStatusOrang[4]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Missing for Another Reason"),
+        trailing: Text("${listStatusOrang[5]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Fissure Sealant"),
+        trailing: Text("${listStatusOrang[6]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Fix dental prosthesis / crown, abutment, veneer "),
+        trailing: Text("${listStatusOrang[7]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Unerupted"),
+        trailing: Text("${listStatusOrang[8]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Persistance"),
+        trailing: Text("${listStatusOrang[9]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Whitespot"),
+        trailing: Text("${listStatusOrang[10]}" + " orang"),
+      ),
+    ];
+
+    ohisOrang=[
+      Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 300,
+              width: 300,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage("http://api-dentis.herokuapp.com${bodyOhisOrang["image"]}")
+                )
+              ),
+            )
+          ],
+        )
+      ),
+      Container(height: 10,),
+      ListTile(
+        title: Text("Baik"),
+        trailing: Text("${listOhisOrang[0]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Sedang"),
+        trailing: Text("${listOhisOrang[1]}" + " orang"),
+      ),
+      ListTile(
+        title: Text("Buruk"),
+        trailing: Text("${listOhisOrang[2]}" + " orang"),
+      ),
+    ];
     setState(() {
+      body=status;
       this.height=0.0;
     });
     }
     catch(e){
+      print(e);
       error();
     }
   }
@@ -178,107 +290,85 @@ class _StatistikState extends State<Statistik> {
           fit: BoxFit.cover
         )
       ),
-      child: ListView(
-        padding: EdgeInsets.only(left:40,right:40),
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(height:40),
-              Text(
-                "Statistik",
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              Container(height: 40,),
-              Row(
-                children: <Widget>[
-                  InkWell(
-                    onTap: (){
-                      setState(() {
-                        selected="status";
-                      });
-                    },
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          width: 165,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/tabs/status-selected.png")
-                            )
-                          ),
-                        ),
-                        Container(
-                          width: 165,
-                          height: selected=="ohis"?40:0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/tabs/status.png")
-                            )
-                          ),
-                        ),
-                      ],
-                    )
-                  ),
-                  InkWell(
-                    onTap: (){
-                      setState(() {
-                        selected="ohis";
-                      });
-                    },
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          width: 165,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/tabs/ohis.png")
-                            )
-                          ),
-                        ),
-                        Container(
-                          width: 165,
-                          height: selected=="ohis"?40:0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/tabs/ohis-selected.png")
-                            )
-                          ),
-                        ),
-                      ],
-                    )
-                  ),
-                ],
-              ),
-              Container(height: 36,),
-              Stack(
-                children: <Widget>[
-                  Column(
-                    children: selected=="status"?status:ohis,
-                  ),
-                  Container(
-                    height: this.height,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                  ),
-                  Container(
-                    height: this.height,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: CircularProgressIndicator(),
+      child: Padding(
+        padding: EdgeInsets.all(0),
+        child: ListView(
+          padding: EdgeInsets.only(left: 35,right: 35),
+          children: <Widget>[
+            Container(height: 40.0,),
+            Text(
+              "Statistik",
+              style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+            ),
+            Container(height: 15,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(height:10),
+                new DropdownButton(
+                  isExpanded: true,
+                  value: selected,
+                  items: <DropdownMenuItem<String>>[
+                    DropdownMenuItem(
+                      value: "statusOrang",
+                      child: Text("Status Prevalensi",style: TextStyle(color: Colors.grey[700]),),
                     ),
-                  )
-                ],
-              ),
-              
-            ],
-          )
-        ],
+                    DropdownMenuItem(
+                      value: "ohisOrang",
+                      child: Text("Ohis Prevalensi",style: TextStyle(color: Colors.grey[700]),),
+                    ),
+                    DropdownMenuItem(
+                      value: "status",
+                      child: Text("Status",style: TextStyle(color: Colors.grey[700]),),
+                    ),
+                    DropdownMenuItem(
+                      value: "ohis",
+                      child: Text("Ohis",style: TextStyle(color: Colors.grey[700]),),
+                    ),
+                  ],
+                  onChanged: (String a){
+                    setState(() {
+                      selected=a; 
+                      if(a=="ohis"){
+                        body=ohis;
+                      }
+                      else if (a=="status"){
+                        body=status;
+                      }
+                      else if(a=="ohisOrang"){
+                        body=ohisOrang;
+                      }
+                      else if (a=="statusOrang"){
+                        body=statusOrang;
+                      }
+                    });
+                  },
+                ),
+                Container(height: 10,),
+                Stack(
+                  children: <Widget>[
+                    Column(
+                      children: body,
+                    ),
+                    Container(
+                      height: this.height,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                    ),
+                    Container(
+                      height: this.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  ],
+                ),
+                
+              ],
+            )
+          ]
+        )
       )
     );
   }

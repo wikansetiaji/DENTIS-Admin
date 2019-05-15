@@ -29,7 +29,6 @@ class _AdminManajersState extends State<AdminManajers> {
 
   load()async{
     try {
-      isi=[];
       setState(() {
         this.height=MediaQuery.of(context).size.height;
       });
@@ -53,6 +52,7 @@ class _AdminManajersState extends State<AdminManajers> {
       }
       var body = json.decode(response.body);
       int temp =1;
+      isi=[];
       for (var i in body){
         setState(() {
           isi.add(

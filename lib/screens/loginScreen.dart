@@ -27,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String alert = "";
+  bool showPassword=false;
 
   login() async{
     setState(() {
@@ -135,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Container(
                                 margin: EdgeInsets.only(bottom: 15),
-                                width: 200,
+                                width: 250,
                                 child: TextField(
                                   decoration: InputDecoration(
                                     labelText: "username",
@@ -143,16 +144,34 @@ class _LoginScreenState extends State<LoginScreen> {
                                   controller: usernameController,
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 10),
-                                width: 200,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    labelText: "password"
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    width: 200,
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        labelText: "password"
+                                      ),
+                                      controller: passwordController,
+                                      obscureText: !this.showPassword,
+                                    ),
                                   ),
-                                  controller: passwordController,
-                                  obscureText: true,
-                                ),
+                                  IconButton(
+                                    icon: Icon(Icons.visibility,size: 20,),
+                                    onPressed: (){
+                                      setState(() {
+                                        if (showPassword==false){
+                                          this.showPassword=true;
+                                        }
+                                        else{
+                                          this.showPassword=false;
+                                        }
+                                      });
+                                    },
+                                  )
+                                ],
                               ),
                               Text("${alert}",style: TextStyle(color: Colors.red, fontSize: 12),),
                               Container(height:30),
